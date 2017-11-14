@@ -61,6 +61,10 @@ class DollService {
     })
   }
 
+  /**
+   * 修改娃娃详细信息
+   * @param id
+   */
   editDoll(id: number) {
     let dollObj = store.doll.dollInfo
     let params = {

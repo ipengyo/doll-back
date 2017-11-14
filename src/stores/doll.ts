@@ -4,7 +4,7 @@ class Doll {
   dollInfo = new DollInfo()
   total = 0
   currentPage = 1
-  pageSize = 5
+  pageSize = 15
   boxesList: any = []
   boxInfo: any = {
     name: '',

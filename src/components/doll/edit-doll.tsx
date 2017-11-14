@@ -57,7 +57,7 @@ export default class SkusComponent extends Vue {
               format={['jpg','jpeg','png']}
               max-size={5120}
               type="drag"
-              action={`/doll/api/setDollPicture?dollid=${this.dollID}`}
+              action={`/picture/doll/${this.dollID}`}
               style="display: inline-block;width:58px;">
                 <div style="width: 58px;height:58px;line-height: 58px;">
                   <icon type="camera" size="20"></icon>

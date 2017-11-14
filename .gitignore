@@ -1,2 +1,4 @@
 node_modules/*
 dist/*
+src/types/model.ts
+src/types/response.ts

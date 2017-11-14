@@ -41,8 +41,7 @@ export default class AddDollComponent extends Vue {
 								<i-input type="text" value={this.doll.pieceCount} placeholder='碎片数量' on-input={(val: string) => this.doll.pieceCount = val} />
 							</form-item>
 							<form-item label="稀有碎片序号：" prop="rarePieces">
-								<i-input type="text" value={this.doll.rarePieces ? this.doll.rarePieces.join(',') : ''} placeholder='稀有碎片序号1-2个，用英文‘,’隔开' on-input={(val: string) => this.doll.rarePieces = val.split(',')} />
-							</form-item>
+								<i-input type="text" value={this.doll.rarePieces ? this.doll.rarePieces.join(',') : ''} placeholder='稀有碎片序号1-2个，用英文‘,’隔开' on-input={(val: string) => this.doll.rarePieces = val.split(',')} /></form-item>
 							<form-item label="娃娃稀有值：" prop="price">
 								<i-input type="text" value={this.doll.price} placeholder='娃娃稀有度，填数值' on-input={(val: string) => this.doll.price = val} />
 							</form-item>
@@ -79,10 +78,10 @@ export default class AddDollComponent extends Vue {
 			{ required: true, message: "碎片数量不能为空", trigger: 'blur' }
 		],
 		rarePieces: [
-			{ required: true, message: "稀有值不能为空", trigger: 'blur' }
+			
 		],
 		price: [
-			{ required: true, message: "稀有碎片不能为空", trigger: 'blur' }
+			{ required: true, message: "稀有值不能为空", trigger: 'blur' },
 		]
 	}
 	@Prop()

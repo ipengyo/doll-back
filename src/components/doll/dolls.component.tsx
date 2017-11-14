@@ -22,6 +22,9 @@ export default class SkusComponent extends Vue {
         <div class="component-table">
           <i-table height={this.tableHeight} columns={this.columns} data={store.doll.dollList} />
         </div>
+        <div class="page-wrap">
+          <page class="pager" current={store.doll.currentPage} total={store.doll.total} page-size={store.doll.pageSize} show-total show-elevator on-on-change={this.pageIndexChanged} ></page>
+        </div>
       </div>
     )
   }
@@ -29,7 +32,7 @@ export default class SkusComponent extends Vue {
   // 設置表格高度
   get tableHeight() {
     let cHeight = document.body.clientHeight;
-    return cHeight-150;
+    return cHeight-200;
   }
 
   pageInfo = {
@@ -49,7 +52,7 @@ export default class SkusComponent extends Vue {
     key: 'status'
   }, {
     title: '娃娃id',
-    key: 'dollid'
+    key: 'id'
   }, {
     title: '娃娃库存',
     key: 'count'
@@ -65,7 +68,7 @@ export default class SkusComponent extends Vue {
     align: 'rarePieces',
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
-        ((params.row) as any).rarePieces.join(',')
+        params.row.rarePieces.join(',')
       )
     }
   }, {
@@ -76,7 +79,7 @@ export default class SkusComponent extends Vue {
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          <i-button type="text" class="opt-col-btn" on-click={() => { this.handleEdit(params.row.dollid) }}>编辑</i-button>
+          <i-button type="text" class="opt-col-btn" on-click={() => { this.handleEdit(params.row.id) }}>编辑</i-button>
         </div>
       )
     }
@@ -100,7 +103,7 @@ export default class SkusComponent extends Vue {
      */
     component.$on('ok', (dollInfo: DollInfo) => {
       dollService.addDoll(dollInfo).then((data: any) => {
-        if (data.stat === 'OK') {
+        if (data.status === 200) {
           this.$Message.success('添加成功')
           dollService.getDolls()
         } else {
@@ -108,6 +111,10 @@ export default class SkusComponent extends Vue {
         }
       })
     })
+  }
+  pageIndexChanged(val: string) {
+    store.doll.currentPage = parseInt(val, 10)
+    dollService.getDolls()
   }
 
   handleEdit(id: number) {

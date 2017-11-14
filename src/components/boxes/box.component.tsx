@@ -131,6 +131,6 @@ export default class BoxsComponent extends Vue {
   created() {
     store.common.activeIndex = 'boxes'
     boxService.getBoxes()
-    dollService.getDolls()
+    boxService.getDolls()
   }
 }

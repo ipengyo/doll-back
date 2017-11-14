@@ -261,3 +261,11 @@ export class DollsInfo {
   totalElements: 0
   totalPages: 0
 }
+/**
+ * 娃娃机
+ */
+export class BoxInfo {
+  name: string
+  status: string
+  dolls: string[]
+}

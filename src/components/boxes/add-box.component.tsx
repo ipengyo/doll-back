@@ -1,7 +1,7 @@
 import Vue, { CreateElement } from 'vue'
 import { Component, Watch, Prop } from 'vue-property-decorator'
 
-import { ColumnOption, ColumnRenderParams, UploadFileList, Upload, Modal, Form, FormItem,FormRule } from 'iview'
+import { ColumnOption, ColumnRenderParams, UploadFileList, Upload, Modal, Form, FormItem, FormRule } from 'iview'
 
 import store from '../../stores/store'
 import { SkuInfo } from '../../types/model'
@@ -31,16 +31,16 @@ export default class AddDollComponent extends Vue {
 									<i-option value='close'>添加到仓库</i-option>
 								</i-select>
 							</form-item>
-							<form-item label="选择娃娃机" prop="dollIds">
-                                <i-select value={this.box.dollIds} placeholder='选择娃娃机' on-input={(val: string[]) => this.handleSelect(val)} multiple>
-                                    {store.doll.dollList.map((item: any) => {
-                                    return <i-option value={item.dollid}>{item.name}</i-option>
-                                    })}
-                                </i-select>
+							<form-item label="选择娃娃机">
+								<i-select value={this.box.dollIds} placeholder='选择娃娃机' on-input={(val: string[]) => this.handleSelect(val)} multiple>
+									{store.doll.dollList.map((item: any) => {
+										return <i-option value={item.dollid}>{item.name}</i-option>
+									})}
+								</i-select>
 							</form-item>
 						</i-form>
 					</div>
-                    <div slot="footer">
+					<div slot="footer">
 						<i-button type="text" on-click={this.cancel}>取消</i-button>
 						<i-button type="primary" on-click={() => this.ok('box')}>确定</i-button>
 					</div>
@@ -51,42 +51,35 @@ export default class AddDollComponent extends Vue {
 
 	status: string = ''
 	box: any = {
-        name: '',
-        status: '',
-        dollIds:[]
-      }
-    handleSelect(val: string[]) {
-    this.box.dollIds = val
-    }
-    dollIds: string[] = []
+		name: '',
+		status: '',
+		dollIds: []
+	}
+	handleSelect(val: string[]) {
+		this.box.dollIds = val
+	}
+	dollIds: string[] = []
 
-	
-    ruleBox:FormRule={
-        name:[
-          { required: true, message: "娃娃机名称不能为空", trigger: 'blur' }
-        ],
-        status:[
-          { required: true, message: "状态不能为空", trigger: 'blur' }
-        ]
-    }
-    @Prop()
+
+	ruleBox: FormRule = {
+		name: [
+			{ required: true, message: "娃娃机名称不能为空", trigger: 'blur' }
+		],
+		status: [
+			{ required: true, message: "状态不能为空", trigger: 'blur' }
+		]
+	}
+	@Prop()
 	title: string
 
 	visible: boolean = false
 
 	name: string = ''
 
-	/**
-	 * 等待对话框隐藏之后，再执行销毁
-	 */
+	//等待对话框隐藏之后，再执行销毁
 	close() {
-		/**
-		 * 销毁组件实例
-		 */
+		//销毁组件实例
 		this.$destroy()
-		/**
-		 * 移除组件DOM
-		 */
 		this.$el.parentNode.removeChild(this.$el)
 	}
 
@@ -97,10 +90,6 @@ export default class AddDollComponent extends Vue {
 	ok(name: string) {
 		(this.$refs[name] as Form).validate((valid: boolean) => {
 			if (valid) {
-				// let rarePieces: string[] = this.doll.rarePieces.split(',')
-				// rarePieces.forEach(row => {
-				// 	(row as any) = parseInt(row, 10)
-                // })
 				let dollInfo = {
 					name: this.box.name,
 					status: this.box.status,
@@ -114,16 +103,9 @@ export default class AddDollComponent extends Vue {
 				})
 			}
 		})
-		/**
-		 * 将执行结果以事件的方式通知父组件调用者
-		 */
-		//this.$emit('ok', this.doll)
 	}
-    
+
 	mounted() {
 		this.visible = true
-		this.$nextTick(() => {
-
-		})
 	}
 }
