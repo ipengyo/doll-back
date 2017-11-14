@@ -31,6 +31,11 @@ export class OrderListsResponse extends CommonResponse{
 export class UserListsResponse extends CommonResponse{
 
 }
-
+/**
+ * 娃娃机列表
+ */
+export class BoxListsResponse extends CommonResponse {
+  
+}
 
 
