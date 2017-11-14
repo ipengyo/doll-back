@@ -1,0 +1,5 @@
+import 'vue'
+import 'vue-router'
+import 'vue-property-decorator'
+import 'iview'
+import 'bluebird'

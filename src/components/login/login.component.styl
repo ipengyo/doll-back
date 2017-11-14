@@ -1,0 +1,46 @@
+[login-component] {
+  width: 100%;
+  height: 100%;
+  .login-box {
+    width: 440px;
+    height: 310px;
+    background-color: #fff;
+    background-clip: padding-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -(@height / 2);
+    margin-left: -(@width / 2);
+    box-sizing: border-box;
+    border: 5px solid rgba(0,0,0,0.2);
+    .logo-wrap {
+      height: 56px;
+      line-height: 56px;
+      background-color: #f8fbfb;
+      text-align: center;
+      font-size: 18px;
+      // color: #484848;
+      font-weight: bold;
+    }
+    .login-input {
+      width: 350px;
+      margin: 20px auto;
+      display: block;
+      input {
+        height:40px;
+      }
+    }
+    .login-button {
+      width: 350px;
+      height: 40px;
+      display: block;
+      margin: 10px auto;
+      background-color: #3bc0c3
+      border-color: @background-color;
+    }
+    .checkbox-wrap {
+      width: 350px;
+      margin: auto;
+    }
+  }
+}

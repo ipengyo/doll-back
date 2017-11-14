@@ -1,0 +1,127 @@
+[app-component] {
+  .app-header {
+    height: 60px;
+    line-height: 60px;
+    min-width: 1150px;
+    position: relative;
+    .header-left {
+      position: absolute;
+      left: 20px;
+      width: 200px;
+      font-size: 16px;
+      height: 100%;
+      img {
+        vertical-align: middle;
+      }
+    }
+    .header-right {
+      position: absolute;
+      right: 30px;
+      &>div {
+        float: right;
+        cursor: pointer;
+      }
+      .user-avatar {
+        width: 70px;
+        cursor: pointer;
+        position: relative;
+        margin-left: 30px;
+        .user-img {
+          height: 40px;
+          width: 40px;
+          background: url(../../assets/img/user.png);
+          background-size: 40px 40px;
+          background-repeat: no-repeat;
+          border-radius: 50%;
+          margin-top: 10px;
+        }
+        & > img {
+          width: 32px;
+          height: 32px;
+          display: inline-block;
+          vertical-align: middle;
+          border-radius: 50%;
+        }
+        .icon-user-img-down-arrow {
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          margin-left: 10px;
+          background-image: url(../../assets/img/tree.png);
+          background-position: -5px -45px;
+        }
+        .nav-menu {
+          width: 150px;
+          z-index: 99;
+          background: #FFF;
+          border: 1px solid #E7E7E7;
+          position: absolute;
+          top: 59px;
+          right: -50px;
+          padding: 5px 0;
+          box-shadow: 0 2px 10px rgba(0,0,0,.2);
+          em{
+            display: block;
+            border-width: 8px;
+            position: absolute;
+            top: -16px;
+            left: 38px;
+            border-style: solid dashed dashed;
+            border-color: transparent  transparent #d7dde4;
+            line-height: 0;
+          }
+          span{
+            display: block;
+            border-width: 8px;
+            position: absolute;
+            top: -14px;
+            left: 38px;
+            border-style: solid dashed dashed;
+            border-color: transparent transparent #fff;
+            font-size: 0;
+            line-height: 0;
+          }
+          .nav-menu-item {
+            cursor: pointer;
+            line-height: 25px;
+            text-align: center;
+            padding:5px 10px;
+            a {
+              color: #666;
+            }
+            &:not(:last-child) {
+            }
+            &:hover {
+              background: #EEE;
+            }
+          }
+        }
+      }
+      .logout {
+        &:hover {
+          color: #2d8cf0;
+        }
+      }
+    }
+  }
+  .app-nav {
+    position: absolute;
+    left: 0;
+    width: 240px;
+    bottom: 0;
+    top: 60px;
+    background-color: #495060;
+  }
+  .app-content {
+    position: absolute;
+    top: 60px;
+    left: 240px;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    min-width: 1150px;
+    background-color: #f4f4f4;
+    padding: 10px;
+  }
+  
+}

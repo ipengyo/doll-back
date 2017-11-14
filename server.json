@@ -1,0 +1,11 @@
+{
+    "port": 3010,
+    "root": {
+        "^\/(img|css|js|kindeditor)\/": "dist/medicine_console",
+        "\\.html$": "dist/medicine_console"
+    },
+    "proxy": {
+        "^/doll": "http://192.168.1.144:8086",
+        "^/user": "http://192.168.1.144:8888"
+    }
+}
