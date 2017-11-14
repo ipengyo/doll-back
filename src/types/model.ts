@@ -261,3 +261,19 @@ export class DollsInfo {
   totalElements: 0
   totalPages: 0
 }
+//添加商品
+export class AddSku{
+  productName: string
+  description: string
+  gameCount: number
+  price: number
+}
+//商品信息
+export class ProductsInfo {
+  createTime:string
+  description:string
+  gameCount:number
+  id:number
+  name:string
+  price:number
+}

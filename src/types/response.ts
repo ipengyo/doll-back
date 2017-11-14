@@ -1,4 +1,4 @@
-import { DollsInfo } from './model'
+import { DollsInfo,ProductsInfo } from './model'
 /**
  * 通用接口返回
  */
@@ -18,6 +18,18 @@ export class LoginResponse extends CommonResponse {
  */
 export class DollListsResponse extends CommonResponse {
   dolls: DollsInfo
+}
+//商品列表
+export class SkuListsResponse extends CommonResponse{
+  products: ProductsInfo
+}
+//订单列表
+export class OrderListsResponse extends CommonResponse{
+
+}
+//用户信息列表
+export class UserListsResponse extends CommonResponse{
+
 }
 
 

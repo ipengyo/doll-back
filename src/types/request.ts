@@ -18,7 +18,7 @@ export class AddProductRequest extends RequestInfo {
   productName: string = ''
   description: string = ''
   gameCount: number = 0
-  price: string = ''
+  price: number = 0
 }
 export interface CreateBoxRequest extends RequestInfo{
   name:string
