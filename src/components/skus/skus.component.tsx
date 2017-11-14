@@ -20,10 +20,6 @@ export default class SkusComponent extends Vue {
       <div skus-component>
         <div class="component-header">
           <i-button type="primary" icon="plus-round" class="search-btn" on-click={this.addsku}>添加商品</i-button>
-          {/* <i-input class="search-ipt" type="text" value={this.sku.productName} placeholder = '商品名称' on-input={(val: string) => this.sku.productName = val} />
-          <i-input class="search-ipt" type="text" value={this.sku.description} placeholder = '商品描述' on-input={(val: string) => this.sku.description = val} />
-          <i-input class="search-ipt" type="text" value={this.sku.gameCount} placeholder = '可兑换的抓娃娃次数' on-input={(val: string) => this.sku.gameCount = val} />
-          <i-input class="search-ipt" type="text" value={this.sku.price} placeholder = '需要支付的金额' on-input={(val: string) => this.sku.price = val} /> */}
         </div>
         <div class="component-table">
           <i-table height={this.tableHeight} columns={this.columns} data={store.doll.productList} />
@@ -35,8 +31,8 @@ export default class SkusComponent extends Vue {
   sku: any = {
     productName: '',
     description: '',
-    gameCount: '',
-    price: ''
+    gameCount: null,
+    price: null
   }
   
   pageInfo = {
@@ -50,7 +46,7 @@ export default class SkusComponent extends Vue {
   }
   columns: ColumnOption[] = [{
     title: '商品名称',
-    key: 'productName'
+    key: 'name'
   }, {
     title: '商品描述',
     key: 'description'
@@ -89,7 +85,7 @@ export default class SkusComponent extends Vue {
     component.$props.title = '添加商品'
     component.$on('ok', (sku: AddProductRequest) => {
       skuService.addProduct(sku).then((data: any) => {
-        if (data.stat == 'OK') {
+        if (data.status == 200) {
           this.$Message.success('添加成功')
           skuService.getProductList()
         } else {
@@ -105,7 +101,7 @@ export default class SkusComponent extends Vue {
   }
   handleDelete(id: number) {
     skuService.deleteProduct(id).then((data: any) => {
-      if (data.stat == 'OK') {
+      if (data.status == 200) {
         this.$Message.success('删除成功')
       } else {
         this.$Message.error(data.stat)
