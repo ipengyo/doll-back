@@ -4,12 +4,11 @@ import { Component, Watch } from 'vue-property-decorator'
 import { ColumnOption, ColumnRenderParams, Modal } from 'iview'
 
 import store from '../../stores/store'
-import { CreateDollRequest } from '../../types/request'
+import { DollInfo } from '../../types/model'
 import commonService from '../../services/common.service'
 import dollService from '../../services/doll.service'
 
 import './dolls.component.styl'
-
 import AddDollComponent from './add-doll.component'
 
 @Component
@@ -27,6 +26,11 @@ export default class SkusComponent extends Vue {
     )
   }
 
+  // 設置表格高度
+  get tableHeight() {
+    let cHeight = document.body.clientHeight;
+    return cHeight-150;
+  }
 
   pageInfo = {
     pageIndex: 1,
@@ -94,7 +98,7 @@ export default class SkusComponent extends Vue {
     /**
      * 监听组件实例的自定义事件
      */
-    component.$on('ok', (dollInfo: CreateDollRequest) => {
+    component.$on('ok', (dollInfo: DollInfo) => {
       dollService.addDoll(dollInfo).then((data: any) => {
         if (data.stat === 'OK') {
           this.$Message.success('添加成功')
@@ -113,10 +117,5 @@ export default class SkusComponent extends Vue {
   created() {
     store.common.activeIndex = 'dolls'
     dollService.getDolls()
-  }
-
-  get tableHeight() {
-    let cHeight = document.body.clientHeight;
-    return cHeight-150;
   }
 }

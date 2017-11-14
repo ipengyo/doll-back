@@ -1,4 +1,4 @@
-import { IntegralInfo, LogisticsInfo, ShipperInfo, DistributionRecordInfo, OrderInfo, DistributionInfo, OrderAllType, OrderStatistics, ReportInfo, SkuInfo, ToDealLists, UserInfo, DataStatistics } from './model'
+import { DollsInfo } from './model'
 /**
  * 通用接口返回
  */
@@ -13,6 +13,11 @@ export class CommonResponse {
 export class LoginResponse extends CommonResponse {
   token: string
 }
-
+/**
+ * 娃娃列表
+ */
+export class DollListsResponse extends CommonResponse {
+  dolls: DollsInfo
+}
 
 

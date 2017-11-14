@@ -1,6 +1,7 @@
 import httpService from './http.service'
 import { CommonResponse } from '../types/response'
 import store from '../stores/store'
+import { Message } from 'iview'
 
 import commonService from './common.service'
 
@@ -56,31 +57,12 @@ class DollService {
   login(name: string, password: string): Promise<CommonResponse> {
     return new Promise((resolve, reject) => {
       httpService.ajax<CommonResponse>({
-        url: '/user/admin',
+        url: '/admin/user',
         data: {name, password},
         unsign: true
       }).then(result => {
         if (result.status === 200) {
-          commonService.setCookie('token', result.token, 24*60*60)
-        }
-        resolve(result as CommonResponse)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
-
-  test(test: string): Promise<CommonResponse> {
-    return new Promise((resolve, reject) => {
-      httpService.ajax<CommonResponse>({
-        url: '/user/sign',
-        data: {
-          test: 'wewe'
-        },
-        methods: 'get'
-      }).then(result => {
-        if (result.status === 200) {
-          console.log(result)
+          commonService.setCookie('token', result.token, 1*60*60)
         }
         resolve(result as CommonResponse)
       }).catch(error => {

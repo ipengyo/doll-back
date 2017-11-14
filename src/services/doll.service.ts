@@ -1,18 +1,39 @@
 import httpService from './http.service'
-import { CreateDollRequest } from '../types/request'
-import { CommonResponse } from '../types/response'
+import { CommonResponse, DollListsResponse } from '../types/response'
+import { DollInfo } from '../types/model'
 import store from '../stores/store'
 
 class DollService {
 
-  addDoll(dollObj: CreateDollRequest) {
-    dollObj.api = 'createDoll'
+  getDolls(): Promise<DollListsResponse> {
+    let start = (store.doll.currentPage - 1), size = store.doll.pageSize
     return new Promise((resolve, reject) => {
-      httpService.post<CommonResponse>({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify(dollObj)
+      httpService.ajax<DollListsResponse>({
+        url: '/admin/dolls',
+        methods: 'GET',
+        data: { start, size }
+      }).then(result => {
+        if (result.status === 200) {
+          store.doll.dollList = result.dolls.content
+          store.doll.total = result.dolls.totalElements
         }
+        resolve(result)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
+
+  /**
+   * 添加娃娃
+   * @param dollObj 
+   */
+  addDoll(dollObj: DollInfo): Promise<CommonResponse> {
+    return new Promise((resolve, reject) => {
+      httpService.ajax<CommonResponse>({
+        url: '/admin/doll',
+        methods: 'POST',
+        data: dollObj
       }).then(result => {
         resolve(result)
       }).catch(error => {
@@ -21,152 +42,41 @@ class DollService {
     })
   }
 
-  editDoll() {
+  /**
+   * 根据id获取娃娃信息
+   * @param id 
+   */
+  getDoll(id: number): Promise<CommonResponse> {
+    return new Promise((resolve, reject) => {
+      httpService.ajax<CommonResponse>({
+        url: `/admin/doll/${id}`,
+        data: { dollid: id },
+        methods: 'GET'
+      }).then(result => {
+        store.doll.dollInfo = result.doll
+        resolve(result)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
+
+  editDoll(id: number) {
     let dollObj = store.doll.dollInfo
-    dollObj.api = 'editDoll'
+    let params = {
+      dollId: id,
+      status: dollObj.status,
+      price: dollObj.price,
+      count: dollObj.count,
+      pieceCount: dollObj.pieceCount,
+      inventory: dollObj.count
+    }
     return new Promise((resolve, reject) => {
-      httpService.post({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify(dollObj)
-        }
+      httpService.ajax({
+        url: '/admin/doll',
+        data: params,
+        methods: 'PUT'
       }).then(result => {
-        resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
-
-  getDolls() {
-    return new Promise((resolve, reject) => {
-      httpService.post({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify({
-            api: 'getDollList',
-            begin: 0,
-            limit: 1000
-          })
-        }
-      }).then(result => {
-        store.doll.dollList = (result as any).dolls
-        resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
-
-  getDoll(id: number) {
-    return new Promise((resolve, reject) => {
-      httpService.post({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify({
-            api: 'getDoll',
-            dollid: id
-          })
-        }
-      }).then(result => {
-        store.doll.dollInfo = (result as any).doll
-        resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
-
-  dollOpen(id: number) {
-    return new Promise((resolve, reject) => {
-      httpService.post({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify({
-            api: 'dollOpen',
-            dollid: id
-          })
-        }
-      }).then(result => {
-        store.doll.dollInfo.status = 'open'
-        resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
-
-  dollClose(id: number) {
-    return new Promise((resolve, reject) => {
-      httpService.post({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify({
-            api: 'dollClose',
-            dollid: id
-          })
-        }
-      }).then(result => {
-        store.doll.dollInfo.status = 'close'
-        resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
-
-  setDollCount(id: number, count: number) {
-    return new Promise((resolve, reject) => {
-      httpService.post({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify({
-            api: 'setDollCount',
-            dollid: id,
-            count: count
-          })
-        }
-      }).then(result => {
-        store.doll.dollInfo.count = count
-        resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
-
-  setDollName(id: number, name: string) {
-    return new Promise((resolve, reject) => {
-      httpService.post({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify({
-            api: 'setDollName',
-            dollid: id,
-            name: name
-          })
-        }
-      }).then(result => {
-        store.doll.dollInfo.name = name
-        resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
-  setDollPrice(id: number, price: string) {
-    return new Promise((resolve, reject) => {
-      httpService.post({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify({
-            api: 'setDollPrice',
-            dollid: id,
-            price: price
-          })
-        }
-      }).then(result => {
-        store.doll.dollInfo.price = price
         resolve(result)
       }).catch(error => {
         reject(error)

@@ -1,42 +1,29 @@
-import httpService from './http.service'
-import {
-  LoginRequest
-} from '../types/request'
-import {
-  LoginResponse,
-  CommonResponse
-} from '../types/response'
-
-import Vue from 'vue'
-import { UserInfo, SignInfo } from '../types/model'
-import { Modal } from 'iview'
-import store from '../stores/store'
-
 import MD5 from 'crypto'
 import jsSHA from 'jssha'
 
+import { SignInfo } from '../types/model'
+
 class CommonService {
-  
+
   /**
    * 格式化显示日期时间
    * @param value 
    */
-  
-	dateTime(date: number, format?: string) {
-		// yyyy-MM-dd hh:mm
-		if (!date) return '';
-		var d = new Date();
-		if ((date + '').length == 10) d.setTime(date * 1000);
-		else d.setTime(date);
-		var year = d.getFullYear();
-		var month = d.getMonth() + 1 < 10 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1;
-		var day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
-		var hour = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
-		var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
-		var second = d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds();
-		if (!format) format = 'yyyy-MM-dd hh:mm';
-		return format.replace('yyyy', year+'').replace('MM', month+'').replace('dd', day+'').replace('hh', hour+'').replace('mm', min+'').replace('ss', second+'')
-	}
+  dateTime(date: number, format?: string) {
+    // yyyy-MM-dd hh:mm
+    if (!date) return '';
+    var d = new Date();
+    if ((date + '').length == 10) d.setTime(date * 1000);
+    else d.setTime(date);
+    var year = d.getFullYear();
+    var month = d.getMonth() + 1 < 10 ? '0' + (d.getMonth() + 1) : d.getMonth() + 1;
+    var day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate();
+    var hour = d.getHours() < 10 ? '0' + d.getHours() : d.getHours();
+    var min = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes();
+    var second = d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds();
+    if (!format) format = 'yyyy-MM-dd hh:mm';
+    return format.replace('yyyy', year + '').replace('MM', month + '').replace('dd', day + '').replace('hh', hour + '').replace('mm', min + '').replace('ss', second + '')
+  }
 
   /**
    * 将字符串转换为cookie键值对，默认为当前域cookie
@@ -50,7 +37,12 @@ class CommonService {
       let tmp = arr.split('=')
       cookie[tmp[0]] = tmp[1]
     })
-    return cookie[key]
+
+    if (cookie[key]) {
+      return cookie[key]
+    } else {
+      window.location.href = './login.html'
+    }
   }
 
   /**
@@ -66,63 +58,6 @@ class CommonService {
       return document.cookie = `${key}=${value};expires=${date.toDateString()};path=/`
     }
     return document.cookie = `${key}=${value};path=/`
-  }
-
-  /**
-   * 
-   * @param size    空间大小
-   * @param isUnit   是否单独返回格式化之后的单位大小
-   */
-  formatSize(size: number, isUnit?: boolean) {
-    let sizeResult: string = ''
-    let unit: string = ''
-    let sizeInfo = {
-      sizeResult: '0',
-      unit: ''
-    }
-    if (!size) return sizeInfo;
-    let filesize = size / 1024;
-    if (filesize < 1024) {
-      filesize = parseInt(filesize.toFixed(1));
-      if (filesize == 0) filesize = 0.1;
-      if (isUnit) {
-        sizeResult = filesize + ''
-        unit = 'KB'
-      } else {
-        sizeResult = filesize + " KB";
-      }
-    } else {
-      filesize = filesize / 1024
-      if (filesize < 1024) {
-        if (isUnit) {
-          sizeResult = filesize.toFixed(1)
-          unit = 'MB'
-        } else {
-          sizeResult = filesize.toFixed(1) + " MB";
-        }
-      } else {
-        filesize = filesize / 1024;
-        if (filesize < 1024) {
-          if (isUnit) {
-            sizeResult = filesize.toFixed(1)
-            unit = 'GB'
-          } else {
-            sizeResult = filesize.toFixed(1) + " GB";
-          }
-        } else {
-          filesize = filesize / 1024;
-          if (isUnit) {
-            sizeResult = filesize.toFixed(1)
-            unit = 'TB'
-          } else {
-            sizeResult = filesize.toFixed(1) + " TB";
-          }
-        }
-      }
-    }
-    sizeInfo.sizeResult = sizeResult
-    sizeInfo.unit = unit
-    return sizeInfo
   }
 
   sha1Sign(params: SignInfo) {

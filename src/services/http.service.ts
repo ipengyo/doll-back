@@ -100,7 +100,6 @@ class HttpService {
       }
 
       xhr.onerror = error => {
-        Message.destroy()
         reject(error)
       }
 

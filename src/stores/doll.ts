@@ -1,14 +1,11 @@
+import { DollInfo } from '../types/model'
 class Doll {
-  dollList: any = []
+  dollList: DollInfo[] = []
+  dollInfo = new DollInfo()
+  total = 0
+  currentPage = 1
+  pageSize = 5
   boxesList: any = []
-  dollInfo: any = {
-    name: '',
-    status: '',
-    count: null,
-    pieceCount: null,
-    rarePieces: [],
-    price: ''
-  }
   boxInfo: any = {
     name: '',
     dolls: [],

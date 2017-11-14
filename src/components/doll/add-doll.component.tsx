@@ -4,7 +4,7 @@ import { Component, Watch, Prop } from 'vue-property-decorator'
 import { ColumnOption, ColumnRenderParams, UploadFileList, Form, FormRule } from 'iview'
 
 import store from '../../stores/store'
-import { SkuInfo } from '../../types/model'
+import { DollInfo } from '../../types/model'
 
 import commonService from '../../services/common.service'
 import dollService from '../../services/doll.service'
@@ -41,7 +41,7 @@ export default class AddDollComponent extends Vue {
 								<i-input type="text" value={this.doll.pieceCount} placeholder='碎片数量' on-input={(val: string) => this.doll.pieceCount = val} />
 							</form-item>
 							<form-item label="稀有碎片序号：" prop="rarePieces">
-								<i-input type="text" value={this.doll.rarePieces} placeholder='稀有碎片序号1-2个，用英文‘,’隔开' on-input={(val: string) => this.doll.rarePieces = val} />
+								<i-input type="text" value={this.doll.rarePieces ? this.doll.rarePieces.join(',') : ''} placeholder='稀有碎片序号1-2个，用英文‘,’隔开' on-input={(val: string) => this.doll.rarePieces = val.split(',')} />
 							</form-item>
 							<form-item label="娃娃稀有值：" prop="price">
 								<i-input type="text" value={this.doll.price} placeholder='娃娃稀有度，填数值' on-input={(val: string) => this.doll.price = val} />
@@ -56,13 +56,12 @@ export default class AddDollComponent extends Vue {
 			</div>
 		)
 	}
-	rarePieces: string = ''
-	doll = {
+	doll: DollInfo = {
 		name: '',
 		status: '',
-		count: '',
-		pieceCount: '',
-		rarePieces: '',
+		count: null,
+		pieceCount: null,
+		rarePieces: [],
 		price: ''
 	}
 
@@ -114,30 +113,19 @@ export default class AddDollComponent extends Vue {
 	ok(name: string) {
 		(this.$refs[name] as Form).validate((valid: boolean) => {
 			if (valid) {
-				let rarePieces: string[] = this.doll.rarePieces.split(',')
+				let rarePieces: string[] = this.doll.rarePieces
 				rarePieces.forEach(row => {
 					(row as any) = parseInt(row, 10)
 				})
-				let dollInfo = {
-					name: this.doll.name,
-					status: this.doll.status,
-					count: this.doll.count,
-					pieceCount: this.doll.pieceCount,
-					rarePieces: rarePieces,
-					price: this.doll.price
-				}
+				this.doll.rarePieces = rarePieces
 				setTimeout(this.cancel, 2000);
-				this.$emit('ok', dollInfo)
+				this.$emit('ok', this.doll)
 			} else {
 				this.$Modal.warning({
 					content: '请将内容填写完整'
 				})
 			}
 		})
-		/**
-		 * 将执行结果以事件的方式通知父组件调用者
-		 */
-		//this.$emit('ok', this.doll)
 	}
 	mounted() {
 		this.visible = true

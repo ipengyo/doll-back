@@ -235,3 +235,29 @@ export class Product {
   gameCount: number
   description: string
 }
+/**
+ * 娃娃模型
+ */
+export class DollInfo {
+  name: string
+  status: string
+  count: string | number
+  pieceCount: string
+  rarePieces: string[]
+  price: string
+  url?: string
+  [propName: string]: any
+}
+/**
+ * 娃娃列表
+ */
+export class DollsInfo {
+  content: DollInfo[] = []
+  first: true
+  last: true
+  number: 0
+  numberOfElements: 0
+  size: 1000
+  totalElements: 0
+  totalPages: 0
+}

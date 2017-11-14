@@ -67,8 +67,4 @@ export default class LoginComponent extends Vue {
     })
 
   }
-
-  mounted() {
-    userService.test('heh')
-  }
 }

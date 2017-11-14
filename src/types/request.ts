@@ -14,15 +14,6 @@ export class RequestInfo {
   [propName: string]: any
 }
 
-export class CreateDollRequest extends RequestInfo {
-  name: string = ''
-  status: number = -1
-  count: number = 0
-  pieceCount: string = ''
-  rarePieces: string[] = []
-  price: string = ''
-}
-
 export class AddProductRequest extends RequestInfo {
   productName: string = ''
   description: string = ''
