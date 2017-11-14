@@ -235,6 +235,32 @@ export class Product {
   gameCount: number
   description: string
 }
+
+//添加商品
+export class AddSku{
+  productName: string
+  description: string
+  gameCount: number
+  price: number
+}
+//商品信息
+export class ProductsInfo {
+  createTime:string
+  description:string
+  gameCount:number
+  id:number
+  name:string
+  price:number
+}
+//修改用户信息
+export class EditUser {
+  uid:number
+  channel:string
+  name:string
+  phone:string
+  address:string
+  image:string
+}
 /**
  * 娃娃模型
  */
@@ -261,19 +287,11 @@ export class DollsInfo {
   totalElements: 0
   totalPages: 0
 }
-//添加商品
-export class AddSku{
-  productName: string
-  description: string
-  gameCount: number
-  price: number
-}
-//商品信息
-export class ProductsInfo {
-  createTime:string
-  description:string
-  gameCount:number
-  id:number
-  name:string
-  price:number
+/**
+ * 娃娃机
+ */
+export class BoxInfo {
+  name: string
+  status: string
+  dolls: string[]
 }
