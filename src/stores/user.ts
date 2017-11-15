@@ -1,4 +1,4 @@
-import { UserInfo } from '../types/model'
+import { UserInfo,getUser,coinInfo } from '../types/model'
 
 class User {
   userInfo = new UserInfo()
@@ -6,6 +6,9 @@ class User {
   currentIndex = 1
   total = 0
   pageSize = 150
+  getUsers:getUser[] = []
+  getUser = new getUser()
+  coinInfo = new coinInfo()
  }
 
 let user = new User()

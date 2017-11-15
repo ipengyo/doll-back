@@ -1,16 +1,16 @@
 import Vue, { CreateElement } from 'vue'
 import { Component, Watch, Prop } from 'vue-property-decorator'
 
-import { ColumnOption, ColumnRenderParams, UploadFileList, Upload, Modal, Form, FormItem, FormRule } from 'iview'
+import { ColumnOption, ColumnRenderParams, UploadFileList, Form, FormRule } from 'iview'
 
 import store from '../../stores/store'
-import { SkuInfo } from '../../types/model'
+import { BoxInfo } from '../../types/model'
 
 import commonService from '../../services/common.service'
 import dollService from '../../services/doll.service'
 
 @Component
-export default class AddDollComponent extends Vue {
+export default class AddBoxComponent extends Vue {
 	render(h: CreateElement) {
 		return (
 			<div addBox-component>
@@ -21,20 +21,20 @@ export default class AddDollComponent extends Vue {
 					on-on-hidden={this.close}
 				>
 					<div class="add-box">
-						<i-form ref="box" rules={this.ruleBox} model={this.box}>
+						<i-form ref="box" rules={this.ruleBox} model={this.box} label-width={100}>
 							<form-item label="娃娃机名称" prop="name" >
 								<i-input type="text" value={this.box.name} placeholder='填写名称' on-input={(val: string) => this.box.name = val} />
 							</form-item>
-							<form-item label="娃娃状态" prop="status">
-								<i-select value={this.box.status} placeholder='选择娃娃状态' on-input={(val: string) => { this.box.status = val }} >
+							<form-item label="娃娃机状态" prop="status">
+								<i-select value={this.box.status} placeholder='选择娃娃机状态' on-input={(val: string) => { this.box.status = val }} >
 									<i-option value='open'>直接上架</i-option>
 									<i-option value='close'>添加到仓库</i-option>
 								</i-select>
 							</form-item>
-							<form-item label="选择娃娃机">
-								<i-select value={this.box.dollIds} placeholder='选择娃娃机' on-input={(val: string[]) => this.handleSelect(val)} multiple>
+							<form-item label="选择娃娃" prop="dollIds">
+								<i-select value={this.box.dollIds} placeholder='选择娃娃机中的娃娃' multiple on-input={(val: number[]) => this.handleSelect(val)} >
 									{store.doll.dollList.map((item: any) => {
-										return <i-option value={item.dollid}>{item.name}</i-option>
+										return <i-option value={item.id}>{item.name}</i-option>
 									})}
 								</i-select>
 							</form-item>
@@ -49,17 +49,14 @@ export default class AddDollComponent extends Vue {
 		)
 	}
 
-	status: string = ''
-	box: any = {
+	box: BoxInfo = {
 		name: '',
 		status: '',
 		dollIds: []
 	}
-	handleSelect(val: string[]) {
+	handleSelect(val: number[]) {
 		this.box.dollIds = val
 	}
-	dollIds: string[] = []
-
 
 	ruleBox: FormRule = {
 		name: [
@@ -67,6 +64,9 @@ export default class AddDollComponent extends Vue {
 		],
 		status: [
 			{ required: true, message: "状态不能为空", trigger: 'blur' }
+		],
+		dollIds: [
+			{ type: "array", required: true, message: '请选择娃娃', trigger: 'change' }
 		]
 	}
 	@Prop()
@@ -76,9 +76,7 @@ export default class AddDollComponent extends Vue {
 
 	name: string = ''
 
-	//等待对话框隐藏之后，再执行销毁
 	close() {
-		//销毁组件实例
 		this.$destroy()
 		this.$el.parentNode.removeChild(this.$el)
 	}

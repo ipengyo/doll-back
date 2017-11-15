@@ -1,6 +1,4 @@
 import { RouteConfig } from 'vue-router'
-
-
 import DollsComponent from './components/doll/dolls.component'
 import EditDoll from './components/doll/edit-doll'
 import EditBox from './components/boxes/edit-box'
@@ -9,6 +7,7 @@ import skusComponent from './components/skus/skus.component'
 import UserComponent from './components/user/user.component'
 import OrderComponent from './components/order/order.component'
 import DeliveryComponent from './components/delivery/delivery.component'
+import UserInfoComponent from './components/user/userInfo.component'
 
 const routes: RouteConfig[] = [{
   path: '/',
@@ -26,7 +25,7 @@ const routes: RouteConfig[] = [{
   path: '/boxes',
   component: BoxesComponent
 }, {
-  path: '/editBox/:boxId',
+  path: '/box/:boxId',
   component: EditBox
 }, {
   path: '/user',
@@ -34,9 +33,12 @@ const routes: RouteConfig[] = [{
 }, {
   path: '/order',
   component: OrderComponent
-},{
+}, {
   path: '/delivery',
-  component:DeliveryComponent
+  component: DeliveryComponent
+}, {
+  path: '/userInfo/:userId',
+  component: UserInfoComponent
 }]
 
 export default routes

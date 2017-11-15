@@ -86,21 +86,11 @@ export default class SkusComponent extends Vue {
   }]
 
   addDoll() {
-    /**
-   * 实例化组件
-   */
+
     let component = new AddDollComponent().$mount()
-    /**
-     * 将组件添加到body
-     */
     document.body.appendChild(component.$el)
-    /**
-     * 给组件实例传递prop参数
-     */
     component.$props.title = '添加娃娃'
-    /**
-     * 监听组件实例的自定义事件
-     */
+
     component.$on('ok', (dollInfo: DollInfo) => {
       dollService.addDoll(dollInfo).then((data: any) => {
         if (data.status === 200) {
@@ -120,7 +110,6 @@ export default class SkusComponent extends Vue {
   handleEdit(id: number) {
     this.$router.push('editDoll/' + id)
   }
-
   created() {
     store.common.activeIndex = 'dolls'
     dollService.getDolls()

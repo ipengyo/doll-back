@@ -1,18 +1,19 @@
-import { DollInfo } from '../types/model'
+import { DollInfo, BoxInfo ,ProductsInfo } from '../types/model'
 class Doll {
   dollList: DollInfo[] = []
   dollInfo = new DollInfo()
   total = 0
   currentPage = 1
   pageSize = 15
-  boxesList: any = []
-  boxInfo: any = {
+  boxesList: BoxInfo[] = []
+  boxInfo: BoxInfo = {
     name: '',
-    dolls: [],
-    boxid: '',
+    dollIds: [],
+    id: null,
     status: ''
   }
-  productList: any = []
+  product:ProductsInfo
+  productList: ProductsInfo[] = []
 }
 let doll = new Doll()
 export default doll

@@ -4,7 +4,6 @@ import { Component, Watch, Prop } from 'vue-property-decorator'
 import { ColumnOption, ColumnRenderParams, Form, FormRule } from 'iview'
 
 import store from '../../stores/store'
-import { SkuInfo } from '../../types/model'
 
 import commonService from '../../services/common.service'
 import skuService from '../../services/sku.service'
@@ -24,18 +23,18 @@ export default class AddSkuComponent extends Vue {
 					loading={true}
 				>
 					<div class="add-sku" >
-						<i-form ref="sku" model={this.sku} rules={this.ruleAddSku} label-width={100} >
-							<form-item label="商品名称：" prop="productName">
-								<i-input type="text" value={this.sku.productName} placeholder='商品名称' on-input={(val: string) => this.sku.productName = val} />
+						<i-form ref="sku" model={store.doll.product} rules={this.ruleAddSku} label-width={100} >
+							<form-item label="商品名称：" prop="name">
+								<i-input type="text" value={store.doll.product.name} placeholder='商品名称' on-input={(val: string) => store.doll.product.name = val} />
 							</form-item>
 							<form-item label="商品描述：" prop="description">
-								<i-input type="text" value={this.sku.description} placeholder='商品描述' on-input={(val: string) => this.sku.description = val} />
+								<i-input type="text" value={store.doll.product.description} placeholder='商品描述' on-input={(val: string) => store.doll.product.description = val} />
 							</form-item>
 							<form-item label="兑换次数：" prop="gameCount">
-								<i-input type="text" value={this.sku.gameCount} placeholder='可兑换的抓娃娃次数' on-input={(val: string) => this.sku.gameCount = val} />
+								<i-input type="text" value={store.doll.product.gameCount} placeholder='可兑换的抓娃娃次数' on-input={(val: number) => store.doll.product.gameCount = val} />
 							</form-item>
 							<form-item label="支付金额：" prop="price">
-								<i-input type="text" value={this.sku.price} placeholder='需要支付的金额' on-input={(val: string) => this.sku.price = val} />
+								<i-input type="text" value={store.doll.product.price} placeholder='需要支付的金额' on-input={(val: number) => store.doll.product.price = val} />
 							</form-item>
 						</i-form>
 					</div>
@@ -47,27 +46,14 @@ export default class AddSkuComponent extends Vue {
 			</div>
 		)
 	}
-	rarePieces: string = ''
-	sku: any = {
-		productName: '',
-		description: '',
-		gameCount: null,
-		price: ''
-	}
 
 	ruleAddSku: FormRule = {
-		productName: [
+		name: [
 			{ required: true, message: "商品名称不能为空", trigger: 'blur' }
 		],
 		description: [
 			{ required: true, message: "商品描述不能为空", trigger: 'blur' }
 		],
-		gameCount: [
-			{ required: true, message: "娃娃数量不能为空", trigger: 'blur' }
-		],
-		price: [
-			{ required: true, message: "碎片数量不能为空", trigger: 'blur' }
-		]
 	}
 	@Prop()
 	title: string
@@ -90,7 +76,7 @@ export default class AddSkuComponent extends Vue {
 		(this.$refs[name] as Form).validate((valid: boolean) => {
 			if (valid) {
 				setTimeout(this.cancel, 2000);
-				this.$emit('ok', this.sku)
+				this.$emit('ok')
 			} else {
 				this.$Modal.warning({
 					content: '请将内容填写完整'

@@ -5,13 +5,14 @@ import { ColumnOption, ColumnRenderParams } from 'iview'
 
 import store from '../../stores/store'
 import { SkuInfo } from '../../types/model'
-import {AddProductRequest} from '../../types/request'
+import { AddProductRequest } from '../../types/request'
 
 import commonService from '../../services/common.service'
 import skuService from '../../services/sku.service'
 
 import './skus.component.styl'
 import AddDolStulComponent from './add-sku.component'
+import EditDolStulComponent from './edit-sku.component'
 
 @Component
 export default class SkusComponent extends Vue {
@@ -34,7 +35,7 @@ export default class SkusComponent extends Vue {
     gameCount: null,
     price: null
   }
-  
+
   pageInfo = {
     pageIndex: 1,
     pageSize: 15
@@ -45,17 +46,22 @@ export default class SkusComponent extends Vue {
     manufacturerKey: ''
   }
   columns: ColumnOption[] = [{
+    title: '商品id',
+    key: 'id',
+    align: 'center',
+    width: 100
+  }, {
     title: '商品名称',
     key: 'name'
   }, {
     title: '商品描述',
     key: 'description'
   }, {
-    title: '商品id',
-    key: 'id'
-  }, {
-    title: '数量',
+    title: '兑换次数',
     key: 'gameCount'
+  }, {
+    title: '支付金额',
+    key: 'price'
   }, {
     title: '操作',
     key: 'operation',
@@ -64,6 +70,7 @@ export default class SkusComponent extends Vue {
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
+          <i-button type="text" class="opt-col-btn" on-click={() => { this.handleEdit(params.row.id) }}>编辑</i-button>
           <i-button type="text" class="opt-col-btn" on-click={() => { this.handleDelete(params.row.id) }}>删除</i-button>
         </div>
       )
@@ -78,7 +85,7 @@ export default class SkusComponent extends Vue {
   pageSizeChanged(pageSize: number) {
     this.pageInfo.pageSize = pageSize
   }
-
+  //添加
   addsku() {
     let component = new AddDolStulComponent().$mount()
     document.body.appendChild(component.$el)
@@ -95,10 +102,26 @@ export default class SkusComponent extends Vue {
     })
 
   }
-
+  //编辑
   handleEdit(id: number) {
-    this.$router.push('editSku/'+id)
+    skuService.getProduct(id).then(result => {
+      if (result.status === 200) {
+        store.doll.product = result.product
+        let component = new EditDolStulComponent().$mount()
+        document.body.appendChild(component.$el)
+        component.$props.title = '编辑商品'
+        component.$on('ok', () => {
+          skuService.editProduct(store.doll.product.id).then(data => {
+            if (data.status === 200) {
+              this.$Message.success("修改成功");
+              skuService.getProductList()
+            }
+          })
+        })
+      }
+    });
   }
+  //删除
   handleDelete(id: number) {
     skuService.deleteProduct(id).then((data: any) => {
       if (data.status == 200) {

@@ -1,12 +1,12 @@
 import httpService from './http.service'
-import { CommonResponse,SkuListsResponse } from '../types/response'
+import { CommonResponse, SkuListsResponse, SkuResponse } from '../types/response'
 import store from '../stores/store'
-import {AddSku } from '../types/model'
+import { AddSku, ProductsInfo } from '../types/model'
 
 class DollService {
+
   //添加商品
   addProduct(skuInfo: AddSku): Promise<CommonResponse> {
-
     return new Promise((resolve, reject) => {
       httpService.ajax<CommonResponse>({
         url: '/admin/product',
@@ -19,11 +19,11 @@ class DollService {
       })
     })
   }
-  //获取商品信息列表
-  getProductList():Promise<SkuListsResponse>{
 
+  //获取商品信息列表
+  getProductList(): Promise<SkuResponse> {
     return new Promise((resolve, reject) => {
-      httpService.ajax<SkuListsResponse>({
+      httpService.ajax<SkuResponse>({
         url: '/game/products',
         methods: "GET"
       }).then(result => {
@@ -34,13 +34,28 @@ class DollService {
       })
     })
   }
-  //删除商品
-  deleteProduct(id: number) {
 
+  //获取商品信息
+  getProduct(id: number): Promise<SkuResponse> {
     return new Promise((resolve, reject) => {
-      httpService.ajax({
+      httpService.ajax<SkuResponse>({
+        url: `/admin/product/${id}`,
+        data: { productId: id },
+        methods: 'GET'
+      }).then(result => {
+        resolve(result)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
+
+  //删除商品
+  deleteProduct(id: number): Promise<CommonResponse> {
+    return new Promise((resolve, reject) => {
+      httpService.ajax<CommonResponse>({
         url: '/admin/product',
-        data: {productId: id},
+        data: { productId: id },
         methods: 'DELETE'
       }).then(result => {
         dollService.getProductList()
@@ -50,6 +65,30 @@ class DollService {
       })
     })
   }
+
+  //修改商品
+  editProduct(id: number): Promise<CommonResponse> {
+    let productObj = store.doll.product
+    let params = {
+      productId: id,
+      productName: store.doll.product.name,
+      description: store.doll.product.description,
+      price: store.doll.product.price,
+      gameCount: store.doll.product.gameCount
+    }
+    return new Promise((resolve, reject) => {
+      httpService.ajax<CommonResponse>({
+        url: '/admin/product',
+        data: params,
+        methods: 'PUT'
+      }).then(result => {
+        resolve(result)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
+
 }
 let dollService = new DollService()
 

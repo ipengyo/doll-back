@@ -291,7 +291,42 @@ export class DollsInfo {
  * 娃娃机
  */
 export class BoxInfo {
+  id?: number
   name: string
   status: string
-  dolls: string[]
+  dollIds?: number[]
+  url?:string
+}
+//创建用户
+export class UserNew {
+  name:string
+  password:string
+  openid:string
+  ch:string
+  image:string
+}
+//获取用户信息
+export class getUser{
+  address:string
+  channel:string
+  email:string
+  imageUrl:string
+  name:string
+  openId:string
+  password:string
+  phone:string
+  status:number
+  uid:number
+  image:string
+}
+
+//coin信息
+export class coinInfo{
+  coin:number
+  id:number
+  lifeCoin:number
+  lifeScore:number
+  price:number
+  score:number
+  uid:number
 }

@@ -1,5 +1,5 @@
 import httpService from './http.service'
-import { CommonResponse, BoxListsResponse, DollListsResponse } from '../types/response'
+import { CommonResponse, BoxListsResponse, DollListsResponse, BoxInfoResponse } from '../types/response'
 import { BoxInfo } from '../types/model'
 import store from '../stores/store'
 
@@ -9,13 +9,22 @@ class DollService {
    * @param id 
    */
   getBoxes(): Promise<BoxListsResponse> {
+    store.doll.boxesList = [];
     return new Promise((resolve, reject) => {
       httpService.ajax<BoxListsResponse>({
         url: '/game/boxs',
         methods: 'GET',
       }).then(result => {
         if (result.status === 200) {
-          store.doll.boxesList = result.boxs
+          result.boxs.map((row: any) => {
+            let box: any = {
+              boxid: row.box.id,
+              name: row.box.name,
+              status: row.box.status,
+              dollIds: row.dolls
+            }
+            store.doll.boxesList.push(box);
+          })
         }
         resolve(result)
       }).catch(error => {
@@ -23,21 +32,27 @@ class DollService {
       })
     })
   }
+
   /**
-   * 获取所有娃娃
-   * @param  
+   * 根据id获取娃娃机信息
+   * @param id 
    */
-  getDolls(): Promise<DollListsResponse> {
-    let size = store.doll.total?store.doll.total:100;
-    let start = 0;
+  getBox(id: number): Promise<BoxInfoResponse> {
     return new Promise((resolve, reject) => {
-      httpService.ajax<DollListsResponse>({
-        url: '/admin/dolls',
-        methods: 'GET',
-        data: { start, size }
+      httpService.ajax<BoxInfoResponse>({
+        url: `/admin/box/${id}`,
+        data: { boxid: id },
+        methods: 'GET'
       }).then(result => {
-        if (result.status === 200) {
-          store.doll.dollList = result.dolls.content
+        let dollIds = result.dolls.map((row: any) => {
+          return row.id;
+        })
+        store.doll.boxInfo = {
+          id: result.box.id,
+          name: result.box.name,
+          status: result.box.status,
+          dollIds: dollIds,
+          url: result.url
         }
         resolve(result)
       }).catch(error => {
@@ -46,18 +61,23 @@ class DollService {
     })
   }
 
-  getBox(id: number) {
+  /**
+   * 修改娃娃机详细信息
+   * @param id
+   */
+  editBox(id: number): Promise<BoxInfoResponse> {
+    let boxObj = store.doll.boxInfo
+    let params = {
+      boxId: id,
+      status: boxObj.status,
+      dollIds: boxObj.dollIds
+    }
     return new Promise((resolve, reject) => {
-      httpService.post({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify({
-            api: 'getBox',
-            boxid: id
-          })
-        }
+      httpService.ajax<BoxInfoResponse>({
+        url: '/admin/box',
+        data: params,
+        methods: 'PUT'
       }).then(result => {
-        store.doll.boxInfo = (result as any).box
         resolve(result)
       }).catch(error => {
         reject(error)
@@ -65,65 +85,10 @@ class DollService {
     })
   }
 
-  boxOpen(id: number) {
-    return new Promise((resolve, reject) => {
-      httpService.post({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify({
-            api: 'boxOpen',
-            boxid: id
-          })
-        }
-      }).then(result => {
-        store.doll.boxInfo.status = 'open'
-        resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
-
-  boxClose(id: number) {
-    return new Promise((resolve, reject) => {
-      httpService.post({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify({
-            api: 'boxClose',
-            boxid: id
-          })
-        }
-      }).then(result => {
-        store.doll.boxInfo.status = 'close'
-        resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
-
-
-  setBoxName(id: number, name: string) {
-    return new Promise((resolve, reject) => {
-      httpService.post({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify({
-            api: 'setBoxName',
-            boxid: id,
-            name: name
-          })
-        }
-      }).then(result => {
-        store.doll.dollInfo.name = name
-        resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
-
+  /**
+   * 添加娃娃机
+   * @param boxObj 
+   */
   createBox(boxObj: BoxInfo): Promise<CommonResponse> {
     return new Promise((resolve, reject) => {
       httpService.ajax<CommonResponse>({
@@ -131,46 +96,6 @@ class DollService {
         methods: 'POST',
         data: boxObj
       }).then(result => {
-        resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  }
-
-  // getBoxes() {
-  //   return new Promise((resolve, reject) => {
-  //     httpService.post({
-  //       url: '/doll/api/admin',
-  //       data: {
-  //         params: JSON.stringify({
-  //           api: 'getBoxList',
-  //           begin: 0,
-  //           limit: 1000
-  //         })
-  //       }
-  //     }).then(result => {
-  //       store.doll.boxesList = (result as any).boxes
-  //       resolve(result)
-  //     }).catch(error => {
-  //       reject(error)
-  //     })
-  //   })
-  // }
-
-  addBoxDolls(id: number, dolls: string[]) {
-    return new Promise((resolve, reject) => {
-      httpService.post({
-        url: '/doll/api/admin',
-        data: {
-          params: JSON.stringify({
-            api: 'addBoxDolls',
-            boxid: id,
-            dolls: dolls
-          })
-        }
-      }).then(result => {
-        store.doll.boxesList.dolls = (result as any).dolls
         resolve(result)
       }).catch(error => {
         reject(error)

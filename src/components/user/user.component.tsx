@@ -5,6 +5,7 @@ import { ColumnOption, ColumnRenderParams } from 'iview'
 import store from '../../stores/store'
 import commonService from '../../services/common.service'
 import UserService from '../../services/user.service'
+import { UserNew } from '../../types/model'
 
 import './user.component.styl'
 
@@ -18,12 +19,13 @@ export default class UserComponent extends Vue {
             placeholder="输入用户名搜索用户"
             value={this.name}
             on-input={(val: string) => { this.name = val }}
-            on-on-enter = {this.searchByName}
+            on-on-enter={this.searchByName}
           ></i-input>
           <i-button type="primary" icon="ios-search" class="search-btn" on-click={this.searchByName}>查询</i-button>
+          {/* <i-button type="primary" on-click={() => this.addUser(this.data)}><icon type="plus-round"></icon>添加用户信息</i-button> */}
         </div>
         <div class="component-table">
-          <i-table height={this.tableHeight} columns={this.columns} data={store.user.userLists} />
+          <i-table height={this.tableHeight} columns={this.columns} data={store.user.getUsers} />
         </div>
         <div class="page-wrap">
           <page class="pager" current={store.user.currentIndex} total={store.user.total} page-size={store.user.pageSize} show-total show-elevator on-on-change={this.pageIndexChanged} ></page>
@@ -35,14 +37,16 @@ export default class UserComponent extends Vue {
   name: string = ''
 
   columns: ColumnOption[] = [{
+    title: '用户id',
+    key: 'uid',
+    align: 'center',
+    width: 100
+  }, {
     title: '用户名',
     key: 'name'
   }, {
     title: '渠道号',
-    key: 'ch'
-  }, {
-    title: '用户id',
-    key: 'uid'
+    key: 'channel'
   }, {
     title: '操作',
     key: 'operation',
@@ -51,12 +55,14 @@ export default class UserComponent extends Vue {
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          <i-button type="text" class="opt-col-btn">查看详情</i-button>
+          <i-button type="text" class="opt-col-btn" on-click={() => { this.handleEdit(params.row.uid) }}>查看详情</i-button>
         </div>
       )
     }
   }]
-
+  handleEdit(id: number) {
+    this.$router.push("/userInfo/" + id)
+  }
   pageIndexChanged(val: string) {
     store.user.currentIndex = parseInt(val, 10)
     UserService.getUsers()
@@ -68,6 +74,18 @@ export default class UserComponent extends Vue {
 
   get tableHeight() {
     return document.body.clientHeight - 200;
+  }
+  //adduser test
+  data = {
+    name: 'Yolande',
+    password: 'userobjpassword',
+    openid: 'uddsdffd',
+    ch: 'userobjch',
+    image: 'userobjimage'
+  }
+  addUser(data: UserNew) {
+    console.log(111)
+    UserService.addUser(this.data)
   }
 
   created() {

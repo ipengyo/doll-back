@@ -78,7 +78,7 @@ export default class AddDollComponent extends Vue {
 			{ required: true, message: "碎片数量不能为空", trigger: 'blur' }
 		],
 		rarePieces: [
-			
+
 		],
 		price: [
 			{ required: true, message: "稀有值不能为空", trigger: 'blur' },
