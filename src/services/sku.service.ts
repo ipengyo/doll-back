@@ -3,7 +3,7 @@ import { CommonResponse, SkuListsResponse, SkuResponse } from '../types/response
 import store from '../stores/store'
 import { AddSku, ProductsInfo } from '../types/model'
 
-class DollService {
+class SkuService {
 
   //添加商品
   addProduct(skuInfo: AddSku): Promise<CommonResponse> {
@@ -58,7 +58,6 @@ class DollService {
         data: { productId: id },
         methods: 'DELETE'
       }).then(result => {
-        dollService.getProductList()
         resolve(result)
       }).catch(error => {
         reject(error)
@@ -90,6 +89,6 @@ class DollService {
   }
 
 }
-let dollService = new DollService()
+let skuService = new SkuService()
 
-export default dollService
+export default skuService

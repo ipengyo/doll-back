@@ -71,13 +71,21 @@ export default class SkusComponent extends Vue {
       return (
         <div class="opt-column">
           <i-button type="text" class="opt-col-btn" on-click={() => { this.handleEdit(params.row.id) }}>编辑</i-button>
-          <i-button type="text" class="opt-col-btn" on-click={() => { this.handleDelete(params.row.id) }}>删除</i-button>
+          <poptip
+            confirm
+            title="您确认删除该商品吗？"
+            width={200}
+            on-on-ok={(id: number) => { this.ok(params.row.id) }}>
+            <i-button type="text" class="opt-col-btn">删除</i-button>
+          </poptip>
         </div>
       )
     }
   }]
 
-
+  ok(id: number) {
+    this.handleDelete(id);
+  }
   pageIndexChanged(pageIndex: number) {
     this.pageInfo.pageIndex = pageIndex
   }
@@ -125,6 +133,7 @@ export default class SkusComponent extends Vue {
   handleDelete(id: number) {
     skuService.deleteProduct(id).then((data: any) => {
       if (data.status == 200) {
+        skuService.getProductList()
         this.$Message.success('删除成功')
       } else {
         this.$Message.error(data.stat)

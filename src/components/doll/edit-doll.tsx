@@ -29,7 +29,7 @@ export default class EditDollComponent extends Vue {
             <i-button type="primary" icon="chevron-left" class="search-btn" on-click={() => { this.$router.go(-1) }}>返回</i-button>
           </div>
           <div class="component-form">
-            <i-form label-width={150} ref="doll" model={this.doll}>
+            <i-form label-width={150} ref="doll" model={store.doll.dollInfo} rules={this.ruleEidtDoll}>
               <form-item label="娃娃名称" prop="name">
                 <i-input type="text" value={store.doll.dollInfo.name} placeholder='填写名称' on-input={(val: string) => store.doll.dollInfo.name = val} />
               </form-item>
@@ -64,7 +64,7 @@ export default class EditDollComponent extends Vue {
                   format={['jpg', 'jpeg', 'png']}
                   max-size={5120}
                   type="drag"
-                  action={`/picture/doll/${this.dollID}`}
+                  action={`/picture/doll/${this.dollID}`}    
                   style="display: inline-block;width:58px;">
                   <div style="width: 58px;height:58px;line-height: 58px;">
                     <icon type="camera" size="20"></icon>
@@ -88,7 +88,27 @@ export default class EditDollComponent extends Vue {
   }
 
   dollID: number = -1
-
+  ruleEidtDoll: FormRule = {
+		name: [
+			{ required: true, message: "娃娃名称不能为空", trigger: 'blur' }
+		],
+		status: [
+			{ required: true, message: "请选择娃娃状态", trigger: 'blur' }
+		],
+		count: [
+			{type: 'number', required: true, message: "请输入娃娃数量", trigger: 'blur' }
+		],
+		pieceCount: [
+			{type: 'number', required: true, message: "请输入碎片数量", trigger: 'blur' }
+		],
+		rarePieces: [
+			{ pattern: /^[\d,]+$/, message: '请输入正确格式的稀有碎片序号', trigger: 'blur' }			
+		],
+		price: [
+			{ type: 'number',required: true, message: "请输入稀有值", trigger: 'blur' },
+		]
+  }
+  
   edit() {
     dollService.editDoll(this.dollID).then((data:any) => {
       if(data.status === 200) {

@@ -31,10 +31,10 @@ export default class AddSkuComponent extends Vue {
 								<i-input type="text" value={store.doll.product.description} placeholder='商品描述' on-input={(val: string) => store.doll.product.description = val} />
 							</form-item>
 							<form-item label="兑换次数：" prop="gameCount">
-								<i-input type="text" value={store.doll.product.gameCount} placeholder='可兑换的抓娃娃次数' on-input={(val: number) => store.doll.product.gameCount = val} />
+								<i-input type="text" number={true} value={store.doll.product.gameCount} placeholder='可兑换的抓娃娃次数' on-input={(val: number) => store.doll.product.gameCount = val} />
 							</form-item>
 							<form-item label="支付金额：" prop="price">
-								<i-input type="text" value={store.doll.product.price} placeholder='需要支付的金额' on-input={(val: number) => store.doll.product.price = val} />
+								<i-input type="text" number={true} value={store.doll.product.price} placeholder='需要支付的金额' on-input={(val: number) => store.doll.product.price = val} />
 							</form-item>
 						</i-form>
 					</div>
@@ -49,11 +49,17 @@ export default class AddSkuComponent extends Vue {
 
 	ruleAddSku: FormRule = {
 		name: [
-			{ required: true, message: "商品名称不能为空", trigger: 'blur' }
+			{ required: true, message: "请输入商品名称", trigger: 'blur' }
 		],
 		description: [
-			{ required: true, message: "商品描述不能为空", trigger: 'blur' }
+			{ required: true, message: "请输入商品描述", trigger: 'blur' }
 		],
+		gameCount: [
+			{ type: "number", required: true, message: "请输入娃娃数量", trigger: 'blur' }
+		],
+		price: [
+			{ type: "number", required: true, message: "请输入碎片数量", trigger: 'blur' }
+		]
 	}
 	@Prop()
 	title: string

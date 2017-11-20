@@ -218,26 +218,26 @@ export class orderInfo {
 }
 
 export class Order {
-  createTime: string
+  createTime: number
   id: number
-  orderNumber: number
-  orderPrice: number
-  orderStatus: number
+  orderNumber: string
+  price: number
+  status: number
   productId: number
   uid: number
 }
 
 export class Product {
-  createTime: string
+  createTime: number
   id: number
   price: number
-  productName: string
+  name: string
   gameCount: number
   description: string
 }
 
 //添加商品
-export class AddSku{
+export class AddSku {
   productName: string
   description: string
   gameCount: number
@@ -245,21 +245,21 @@ export class AddSku{
 }
 //商品信息
 export class ProductsInfo {
-  createTime:string
-  description:string
-  gameCount:number
-  id:number
-  name:string
-  price:number
+  createTime: string
+  description: string
+  gameCount: number
+  id: number
+  name: string
+  price: number
 }
 //修改用户信息
 export class EditUser {
-  uid:number
-  channel:string
-  name:string
-  phone:string
-  address:string
-  image:string
+  uid: number
+  channel?: string
+  name?: string
+  phone?: string
+  address?: string
+  image?: string
 }
 /**
  * 娃娃模型
@@ -295,38 +295,45 @@ export class BoxInfo {
   name: string
   status: string
   dollIds?: number[]
-  url?:string
+  url?: string
 }
 //创建用户
 export class UserNew {
-  name:string
-  password:string
-  openid:string
-  ch:string
-  image:string
+  name: string
+  password: string
+  openid: string
+  ch: string
+  image: string
 }
 //获取用户信息
-export class getUser{
-  address:string
-  channel:string
-  email:string
-  imageUrl:string
-  name:string
-  openId:string
-  password:string
-  phone:string
-  status:number
-  uid:number
-  image:string
+export class getUser {
+  address: string
+  channel: string
+  email: string
+  imageUrl: string
+  name: string
+  openId: string
+  password: string
+  phone: string
+  status: number
+  uid: number
+  image: string
 }
 
 //coin信息
-export class coinInfo{
-  coin:number
-  id:number
-  lifeCoin:number
-  lifeScore:number
-  price:number
-  score:number
-  uid:number
+export class coinInfo {
+  coin: number
+  id: number
+  lifeCoin: number
+  lifeScore: number
+  price: number
+  score: number
+  uid: number
+}
+
+//收货地址
+export class addressInfo {
+  name: string
+  phone: number
+  address: string
 }

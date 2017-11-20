@@ -95,6 +95,20 @@ class DollService {
       })
     })
   }
+  //设置用户为正常状态
+  normalUser(id: number): Promise<CommonResponse> {
+    return new Promise((resolve, reject) => {
+      httpService.ajax<CommonResponse>({
+        url: '/admin/user/normal',
+        data: { uid: id },
+        methods: 'POST'
+      }).then(result => {
+        resolve(result)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
   //删除用户
   deleteUser(id: number): Promise<CommonResponse> {
     return new Promise((resolve, reject) => {
@@ -146,6 +160,20 @@ class DollService {
       httpService.ajax<CommonResponse>({
         url: '/user',
         data: userobj,
+        methods: 'POST'
+      }).then(result => {
+        resolve(result)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
+  //管理员获取图片下载地址
+  getImgUrl(pictureid: number): Promise<CommonResponse> {
+    return new Promise((resolve, reject) => {
+      httpService.ajax<CommonResponse>({
+        url: '/picture',
+        data: { pictureid },
         methods: 'POST'
       }).then(result => {
         resolve(result)

@@ -35,15 +35,15 @@ export default class AddDollComponent extends Vue {
 								</i-select>
 							</form-item>
 							<form-item label="娃娃数量：" prop="count">
-								<i-input type="text" value={this.doll.count} placeholder='商品数量' on-input={(val: string) => this.doll.count = val} />
+								<i-input type="text" number={true} value={this.doll.count} placeholder='娃娃数量' on-input={(val: string) => this.doll.count = val} />
 							</form-item>
 							<form-item label="碎片数量：" prop="pieceCount">
-								<i-input type="text" value={this.doll.pieceCount} placeholder='碎片数量' on-input={(val: string) => this.doll.pieceCount = val} />
+								<i-input type="text" number={true} value={this.doll.pieceCount} placeholder='碎片数量' on-input={(val: string) => this.doll.pieceCount = val} />
 							</form-item>
 							<form-item label="稀有碎片序号：" prop="rarePieces">
 								<i-input type="text" value={this.doll.rarePieces ? this.doll.rarePieces.join(',') : ''} placeholder='稀有碎片序号1-2个，用英文‘,’隔开' on-input={(val: string) => this.doll.rarePieces = val.split(',')} /></form-item>
 							<form-item label="娃娃稀有值：" prop="price">
-								<i-input type="text" value={this.doll.price} placeholder='娃娃稀有度，填数值' on-input={(val: string) => this.doll.price = val} />
+								<i-input type="text" number={true} value={this.doll.price} placeholder='娃娃稀有度，填数值' on-input={(val: string) => this.doll.price = val} />
 							</form-item>
 						</i-form>
 					</div>
@@ -69,19 +69,19 @@ export default class AddDollComponent extends Vue {
 			{ required: true, message: "娃娃名称不能为空", trigger: 'blur' }
 		],
 		status: [
-			{ required: true, message: "状态不能为空", trigger: 'blur' }
+			{ required: true, message: "请选择娃娃状态", trigger: 'blur' }
 		],
 		count: [
-			{ required: true, message: "娃娃数量不能为空", trigger: 'blur' }
+			{type: 'number', required: true, message: "请输入娃娃数量", trigger: 'blur' }
 		],
 		pieceCount: [
-			{ required: true, message: "碎片数量不能为空", trigger: 'blur' }
+			{type: 'number', required: true, message: "请输入碎片数量", trigger: 'blur' }
 		],
 		rarePieces: [
-
+			{ pattern: /^[\d,]+$/, message: '请输入正确格式的稀有碎片序号', trigger: 'blur' }			
 		],
 		price: [
-			{ required: true, message: "稀有值不能为空", trigger: 'blur' },
+			{ type: 'number',required: true, message: "请输入稀有值", trigger: 'blur' },
 		]
 	}
 	@Prop()

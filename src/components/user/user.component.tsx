@@ -8,6 +8,8 @@ import UserService from '../../services/user.service'
 import { UserNew } from '../../types/model'
 
 import './user.component.styl'
+import { CreateBoxRequest } from '../../types/request';
+import { ColorAxisOptions } from 'highcharts';
 
 @Component
 export default class UserComponent extends Vue {
@@ -48,6 +50,17 @@ export default class UserComponent extends Vue {
     title: '渠道号',
     key: 'channel'
   }, {
+    title: '用户状态',
+    key: 'status',
+    render: (h:CreateElement, params:ColumnRenderParams) => {
+      return (
+        <div class="opt-column">
+          <i-button v-show={params.row.status === 1} type="success" size="small">正常</i-button>
+          <i-button v-show={params.row.status === 4} type="error" size="small">禁止</i-button>
+        </div>
+      )
+    }
+  },{
     title: '操作',
     key: 'operation',
     align: 'center',
@@ -76,17 +89,17 @@ export default class UserComponent extends Vue {
     return document.body.clientHeight - 200;
   }
   //adduser test
-  data = {
-    name: 'Yolande',
-    password: 'userobjpassword',
-    openid: 'uddsdffd',
-    ch: 'userobjch',
-    image: 'userobjimage'
-  }
-  addUser(data: UserNew) {
-    console.log(111)
-    UserService.addUser(this.data)
-  }
+  // data = {
+  //   name: 'xiaofeiji',
+  //   password: 'userobjpassword',
+  //   openid: 'sjhdjsjabo',
+  //   ch: 'userobjch',
+  //   image: 'userobjimage'
+  // }
+  // addUser(data: UserNew) {
+  //   console.log(111)
+  //   UserService.addUser(this.data)
+  // }
 
   created() {
     store.common.activeIndex = 'user'

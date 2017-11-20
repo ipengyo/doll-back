@@ -8,6 +8,8 @@ import UserComponent from './components/user/user.component'
 import OrderComponent from './components/order/order.component'
 import DeliveryComponent from './components/delivery/delivery.component'
 import UserInfoComponent from './components/user/userInfo.component'
+import OrderInfoComponent from './components/order/orderInfo.component'
+import orderComponent from './components/order/order.component';
 
 const routes: RouteConfig[] = [{
   path: '/',
@@ -39,6 +41,9 @@ const routes: RouteConfig[] = [{
 }, {
   path: '/userInfo/:userId',
   component: UserInfoComponent
+}, {
+  path: '/order/:orderid',
+  component: OrderInfoComponent
 }]
 
 export default routes

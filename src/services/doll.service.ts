@@ -33,7 +33,7 @@ class DollService {
       httpService.ajax<DollListsResponse>({
         url: '/admin/dolls',
         methods: 'GET',
-        data: { start:0, size:100 }
+        data: { start: 0, size: 100 }
       }).then(result => {
         if (result.status === 200) {
           store.doll.dollList = result.dolls.content
@@ -87,7 +87,7 @@ class DollService {
    * 修改娃娃详细信息
    * @param id
    */
-  editDoll(id: number) {
+  editDoll(id: number): Promise<CommonResponse> {
     let dollObj = store.doll.dollInfo
     let params = {
       dollId: id,
@@ -98,7 +98,7 @@ class DollService {
       inventory: dollObj.count
     }
     return new Promise((resolve, reject) => {
-      httpService.ajax({
+      httpService.ajax<CommonResponse>({
         url: '/admin/doll',
         data: params,
         methods: 'PUT'

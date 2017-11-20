@@ -31,10 +31,14 @@ class OrderService {
   getOrderById(orderid: number): Promise<OrderInfoResponse> {
     return new Promise((resolve,reject)=>{
       httpService.ajax<OrderInfoResponse>({
-        url: '/admin/order',
+        url: `/admin/order/${orderid}`,
         methods: 'GET',
         data: {orderid}
-      }).then(result => {
+      }).then((result:any) => {
+        if(result.status === 200) {
+          //store.order.orderInfo = result.order;
+          store.order.orderx = result.order
+        }
         resolve(result)
       }).catch(error => {
         reject(error)

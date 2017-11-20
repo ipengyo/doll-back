@@ -5,6 +5,7 @@ import { ColumnOption, ColumnRenderParams } from 'iview'
 import store from '../../stores/store'
 import commonService from '../../services/common.service'
 import orderService from '../../services/order.service'
+import { CreateBoxRequest } from '../../types/request';
 
 @Component
 export default class orderComponent extends Vue {
@@ -14,7 +15,7 @@ export default class orderComponent extends Vue {
         <div class="component-table">
           <i-table height={this.tableHeight} columns={this.columns} data={store.order.orderLists} />
         </div>
-        <div class="page-wrap">
+        <div class="component-footer">
           <page class="pager" current={store.order.currentIndex} total={store.order.total} page-size={store.order.pageSize} show-total show-elevator on-on-change={this.pageIndexChanged} ></page>
         </div>
       </div>
@@ -28,28 +29,28 @@ export default class orderComponent extends Vue {
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {params.row.order.orderStatus}
+          {params.row._rowKey}
         </div>
       )
     }
   }, {
     title: '订单金额',
-    key: 'orderPrice',
+    key: 'price',
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {params.row.order.orderPrice}
+          {params.row.order.price}
         </div>
       )
     }
   }, {
     title: '订单状态',
-    key: 'orderStatus',
+    key: 'status',
     align: 'center',
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {params.row.order.orderStatus === 2 ? <tag color="green">已完成</tag> : <tag color="red">用户已取消</tag> }
+          {params.row.order.status === 2 ? <tag color="green">已完成</tag> : <tag color="red">用户已取消</tag> }
         </div>
       )
     }
@@ -59,7 +60,8 @@ export default class orderComponent extends Vue {
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {params.row.user.name}
+          {/* {params.row.user.name} */}
+          {(params.row.hasOwnProperty('user'))?params.row.user.name:'nameTest'}
         </div>
       )
     }
@@ -69,7 +71,8 @@ export default class orderComponent extends Vue {
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {params.row.user.ch}
+          {/* {params.row.user.ch} */}
+          {(params.row.hasOwnProperty('user'))?params.row.user.ch:'chTest'}
         </div>
       )
     }
@@ -79,7 +82,8 @@ export default class orderComponent extends Vue {
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {params.row.user.phone}
+          {/* {params.row.user.phone} */}
+          {(params.row.hasOwnProperty('user'))?params.row.user.phone:'phoneTest'}
         </div>
       )
     }
@@ -89,7 +93,8 @@ export default class orderComponent extends Vue {
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {params.row.user.uid}
+          {/* {params.row.user.uid} */}
+          {(params.row.hasOwnProperty('user'))?params.row.user.uid:'uidTest'}
         </div>
       )
     }
@@ -115,11 +120,20 @@ export default class orderComponent extends Vue {
     }
   }, {
     title: '商品名称',
-    key: 'productName',
+    key: 'name',
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {params.row.product && params.row.product.productName}
+          {(params.row.hasOwnProperty('prodcut'))?params.row.prodcut.name:'productTest'}
+        </div>
+      )
+    }
+  }, {
+    title: '操作',
+    render: (h: CreateElement, params: ColumnRenderParams) => {
+      return (
+        <div class="opt-column">
+          <i-button type="text" class="opt-col-btn" on-click={(orderId:number)=>{this.getOrder(params.row.order.id)}}>订单详情</i-button>
         </div>
       )
     }
@@ -131,6 +145,10 @@ export default class orderComponent extends Vue {
 
   searchByName() {
     // orderService.searchorderByName(this.name)
+  }
+
+  getOrder(orderId: number) {
+    this.$router.push("/order/" + orderId)
   }
 
   get tableHeight() {

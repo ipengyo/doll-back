@@ -7,7 +7,7 @@ import store from '../../stores/store'
 import commonService from '../../services/common.service'
 import UserService from '../../services/user.service'
 import EditUserComponent from './editUser.component'
-import { EditUser, UserNew } from '../../types/model'
+import { EditUser, UserNew, addressInfo } from '../../types/model'
 
 import './user.component.styl'
 
@@ -31,9 +31,9 @@ export default class UserInfoComponent extends Vue {
 					</div>
 					<div class="list-item">
 						<label>用户状态：</label>
-						<tag v-show={store.user.getUser.status === 1} color="green">正常</tag>
-						<tag v-show={store.user.getUser.status === 4} color="red">禁止</tag>
-						<i-button on-click={this.changeStatus}>更改</i-button>
+						<i-button size="small" v-show={store.user.getUser.status === 1} type="success" on-click={this.changeIllega}>正常</i-button>
+						<i-button size="small" v-show={store.user.getUser.status === 4} type="error" on-click={this.changeNormal}>禁止</i-button>
+						<alert closable>点击按钮可修改用户状态</alert>
 					</div>
 					<div class="list-item">
 						<label>用户渠道：</label>{store.user.getUser.channel}
@@ -45,11 +45,11 @@ export default class UserInfoComponent extends Vue {
 						<label>用户联系电话：</label>{store.user.getUser.phone}
 					</div>
 					<div class="list-item">
-						<label>用户联系地址：</label>{store.user.getUser.address}
+						<label>收货信息：</label>{store.user.getUser.address}
 					</div>
 					<div class="list-item">
 						<label>用户图片：</label>
-						<img />
+						<img src={store.user.getUser.imageUrl} />
 					</div>
 				</div>
 				<div class="component-list">
@@ -59,9 +59,11 @@ export default class UserInfoComponent extends Vue {
 				</div>
 				<div class="component-list">
 					<div class="list-item">
-						<label>设置硬币变更数（正数表示添加，负数表示减少）：</label>
-						<i-input type="text" value={this.coinChange} placeholder='变更硬币数量，正数表示添加，负数表示减少' on-input={(val: number) => this.coinChange = val} />
-						<i-button on-click={this.changeCoinNum}>修改</i-button>
+						<label>设置硬币变更数：</label>
+						<tooltip content="变更硬币数量,正数表示添加，负数表示减少" class="number-ipt">
+							<input-number value={this.coinChange} on-input={(val: number) => this.coinChange = val} />
+						</tooltip>
+						<i-button type="info" on-click={this.changeCoinNum} icon="edit">保存设置</i-button>
 					</div>
 				</div>
 				<div class="component-footer">
@@ -72,14 +74,16 @@ export default class UserInfoComponent extends Vue {
 	}
 	coinChange: number = 0;
 	userId: number = -1
+
+	//修改用户收货信息
 	editUser() {
 		let component = new EditUserComponent().$mount()
 		document.body.appendChild(component.$el)
-		component.$props.title = '编辑用户'
+		component.$props.title = '编辑用户收货信息'
 		component.$on('ok', (userInfo: EditUser) => {
 			UserService.editUser(userInfo).then((data: any) => {
-				if (data.status === 'OK') {			
-					this.$Message.success('添加成功')
+				if (data.status === 200) {
+					this.$Message.success('修改成功')
 				} else {
 					this.$Message.error(data.stat)
 				}
@@ -87,21 +91,42 @@ export default class UserInfoComponent extends Vue {
 		})
 	}
 	//更改状态
-	changeStatus() {
-		UserService.illegalUser(this.userId).then(() => {
-			UserService.getUser(this.userId)
+	changeIllega() {
+		UserService.illegalUser(this.userId).then(data => {
+			if (data.status === 200) {
+				UserService.getUser(this.userId)
+				this.$Message.success("用户禁用成功！");
+			}
+		})
+	}
+	changeNormal() {
+		UserService.normalUser(this.userId).then(data => {
+			if (data.status === 200) {
+				UserService.getUser(this.userId)
+				this.$Message.success("用户已恢复正常！");
+			}
 		})
 	}
 	//修改硬币数
 	changeCoinNum() {
-		UserService.editCoins(this.userId, this.coinChange).then(data => {
-			if (data.status === 200) {		
-				store.user.coinInfo.coin = store.user.coinInfo.coin + Number(this.coinChange)	
-				this.$Message.success("硬币数量修改成功");		
+		if (this.coinChange === 0) {
+			this.$Message.info("变更数为0，无需修改");
+		} else {
+			let changeAfter = store.user.coinInfo.coin + Number(this.coinChange)
+			if (changeAfter < 0) {
+				this.$Message.error("用户硬币数量不能为负！");
+			} else {
+				UserService.editCoins(this.userId, this.coinChange).then(data => {
+					if (data.status === 200) {
+						store.user.coinInfo.coin = changeAfter;
+						this.$Message.success("硬币数量修改成功");
+						this.coinChange = 0;
+					}
+				})
 			}
-		})
+		}
 	}
-	
+
 	created() {
 		this.userId = parseInt(this.$route.params.userId, 10)
 		UserService.getUser(this.userId)
