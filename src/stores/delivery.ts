@@ -1,16 +1,11 @@
-interface deliveryInfo {
-	uid:number,
-	name:string,
-	dollName:string,
-	// exchangeTime:number,
-	recharge:number,
-	status:string
-}
+import { giftInfo, gift } from '../types/model'
+
 class Delivery {
-	deliveryLists: deliveryInfo[] = []
+	deliveryInfo: gift[] = []
+	deliveryLists: giftInfo[] = []
 	currentIndex = 1
 	total = 0
-	pageSize = 1000
+	pageSize = 50
 }
 
 let delivery = new Delivery()

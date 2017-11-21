@@ -1,50 +1,27 @@
 import httpService from './http.service'
-import { CommonResponse } from '../types/response'
+import { CommonResponse, DeliverysResponse, DeliveryInfoResponse } from '../types/response'
 import store from '../stores/store'
+import { reject, resolve } from 'bluebird';
 
 class DeliveryService {
-	deliveryStatus:any;
-	constructor(){
-		this.deliveryStatus = {exist:'未发货',sending:'送货中',recieved:'已收货'}
+	deliveryStatus: any;
+	constructor() {
+		this.deliveryStatus = { exist: '未发货', sending: '送货中', recieved: '已收货' }
 	}
-	getDeliverys() {
+	/**
+	 * 获取发货列表
+	 */
+	getDeliverys(): Promise<DeliverysResponse> {
+		let start = (store.delivery.currentIndex - 1), size = store.delivery.pageSize
 		return new Promise((resolve, reject) => {
-			httpService.post<CommonResponse>({
-				url: '/doll/api/admin',
-				data: {
-				params: JSON.stringify({
-					api: 'getAllUserGifts',
-				})
-				}
+			httpService.ajax<DeliverysResponse>({
+				url: '/admin/gifts',
+				methods: 'GET',
+				data:{start,size}
 			}).then(result => {
-				if (result.stat === 'OK') {
-					let gifts = result.gifts
-					gifts.map((row:any) =>{
-						let user = row.user.name;
-						let uid = row.user.uid;
-						let items;
-						let total:number;
-						this.getUserOrdes(uid).then((data:any) => {
-							if(data.stat==='OK'){
-								total = data.total;	
-								for(let key in this.deliveryStatus){
-									row[key].map((info:any) => {
-										items = {
-											uid : uid,
-											name:user,
-											dollName:info.doll.name,
-											// exchangeTime:,
-											recharge:total,
-											status:this.deliveryStatus[key],
-										}
-										store.delivery.deliveryLists.push(items);
-									})
-								}
-							}
-						}).catch(error => {
-							reject(error)
-						});
-					})
+				if (result.status === 200) {
+					store.delivery.deliveryLists = result.gifts;	
+					store.delivery.total = result.totalElements;
 				}
 				resolve(result)
 			}).catch(error => {
@@ -53,67 +30,52 @@ class DeliveryService {
 		})
 	}
 	//根据发货状态查询
-	searchByStatus(status:string) {
+	searchByStatus(status: string) {
 		store.delivery.deliveryLists = [];
-		return new Promise((resolve,reject)=>{
-			httpService.post<CommonResponse>({
+		return new Promise((resolve, reject) => {
+			httpService.ajax<CommonResponse>({
 				url: '/doll/api/admin',
-				data: {
-					params:JSON.stringify({
-						api:'searchGiftByStatus',
-						status:status
-					})
-				}
-			}).then(result => {
-				if (result.stat === 'OK') {
-					let gifts = result.gifts;
-					gifts.map((row:any) => {
-						let user = row.user.name;
-						let uid = row.user.uid;
-						let items;
-						let total:number;
-						this.getUserOrdes(uid).then((data:any) => {
-							if(data.stat==='OK'){
-								total = data.total;
-								row[status].map((info:any) => {
-									items = {
-										uid : uid,
-										name:user,
-										dollName:info.doll.name,
-										// exchangeTime:,兑换时间
-										recharge:total,
-										status:this.deliveryStatus[status],
-									}
-									store.delivery.deliveryLists.push(items);
-								});
-							}
-						}).catch(error => {
-							reject(error)
-						})
-					})
-				}
-				resolve(result)
-			}).catch(error =>{
-				reject(error)
-			})
-		})
-	}
-	//获取用户订单接口
-	getUserOrdes(uid:number) {
-		return new Promise((resolve,reject)=>{
-			httpService.post<CommonResponse>({
-				url: '/doll/api/admin',
-				data: {
-					params: JSON.stringify({
-						api: 'getUserOrdes',
-						uid: uid
-					})
-				}
+				methods: 'GET'
 			}).then(result => {
 				resolve(result)
 			}).catch(error => {
 				reject(error)
 			})
+		})
+	}
+	
+	/**
+	 * 管理员通过礼物id更新礼物状态
+	 * @param giftId 
+	 */
+	setGiftStatus(giftId: number,status: string) {
+		return new Promise((resolve, reject) => {
+			httpService.ajax({
+				url: '/admin/gift',
+				methods: 'PUT',
+				data: { giftId: giftId, status: status }
+			}).then(result => {
+				resolve(result)
+			}).catch(error => {
+				reject(error)
+			})
+		})
+	}
+
+	/**
+	 * 管理员通过用户id获取礼物列表
+	 * @param uid 
+	 */
+	getGiftInfoByUid(uid: number):Promise<DeliveryInfoResponse> {
+		return new Promise((resolve, reject) => {
+			httpService.ajax<DeliveryInfoResponse>({
+				url: `/admin/gift/${uid}`,
+				methods: 'GET'
+			}).then(result => {
+				resolve(result)
+			}).catch(err => [
+				reject(err)
+			])
 		})
 	}
 }

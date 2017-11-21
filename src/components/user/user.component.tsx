@@ -5,11 +5,12 @@ import { ColumnOption, ColumnRenderParams } from 'iview'
 import store from '../../stores/store'
 import commonService from '../../services/common.service'
 import UserService from '../../services/user.service'
-import { UserNew } from '../../types/model'
+import Delivery from '../../services/delivery.service'
+import { UserNew, giftInfo } from '../../types/model'
 
 import './user.component.styl'
-import { CreateBoxRequest } from '../../types/request';
-import { ColorAxisOptions } from 'highcharts';
+import UserGiftsComponent from './userGifts.component'
+
 
 @Component
 export default class UserComponent extends Vue {
@@ -24,7 +25,6 @@ export default class UserComponent extends Vue {
             on-on-enter={this.searchByName}
           ></i-input>
           <i-button type="primary" icon="ios-search" class="search-btn" on-click={this.searchByName}>查询</i-button>
-          {/* <i-button type="primary" on-click={() => this.addUser(this.data)}><icon type="plus-round"></icon>添加用户信息</i-button> */}
         </div>
         <div class="component-table">
           <i-table height={this.tableHeight} columns={this.columns} data={store.user.getUsers} />
@@ -64,18 +64,46 @@ export default class UserComponent extends Vue {
     title: '操作',
     key: 'operation',
     align: 'center',
-    width: 180,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
           <i-button type="text" class="opt-col-btn" on-click={() => { this.handleEdit(params.row.uid) }}>查看详情</i-button>
+          <i-button type="text" class="opt-col-btn" on-click={() => { this.handleGift(params.row.uid) }}>礼物兑换列表</i-button>
+          <i-button type="text" class="opt-col-btn" on-click={() => { this.handleDelete(params.row.uid) }}>删除</i-button>
         </div>
       )
     }
   }]
+
+  handleGift(id: number) {
+    Delivery.getGiftInfoByUid(id).then(data => {
+      if (data.status === 200) {
+        if(data.gifts.length === 0){
+          this.$Message.info("该用户还未兑换任何商品")
+        }else{
+          store.delivery.deliveryInfo = data.gifts
+          let component = new UserGiftsComponent().$mount()
+          document.body.appendChild(component.$el)
+          component.$props.title = '用户礼物列表'
+          component.$props.uid = id
+        }
+      }
+    });
+  }
+
   handleEdit(id: number) {
     this.$router.push("/userInfo/" + id)
   }
+
+  handleDelete(id:number) {
+    UserService.deleteUser(id).then(result=>{
+      if(result.status === 200){
+        this.$Message.info("删除成功")
+        UserService.getUsers()
+      }
+    })
+  }
+
   pageIndexChanged(val: string) {
     store.user.currentIndex = parseInt(val, 10)
     UserService.getUsers()
@@ -88,18 +116,6 @@ export default class UserComponent extends Vue {
   get tableHeight() {
     return document.body.clientHeight - 200;
   }
-  //adduser test
-  // data = {
-  //   name: 'xiaofeiji',
-  //   password: 'userobjpassword',
-  //   openid: 'sjhdjsjabo',
-  //   ch: 'userobjch',
-  //   image: 'userobjimage'
-  // }
-  // addUser(data: UserNew) {
-  //   console.log(111)
-  //   UserService.addUser(this.data)
-  // }
 
   created() {
     store.common.activeIndex = 'user'

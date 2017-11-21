@@ -5,8 +5,9 @@ export class UserInfo {
   uid: number
   name: string
   openid: string
-  ch: string
+  channel: string
   address: string
+  phone?: string
 }
 /**
  * 今日订单统计信息类型定义
@@ -336,4 +337,23 @@ export class addressInfo {
   name: string
   phone: number
   address: string
+}
+
+/**
+ * 兑换的礼品
+ */
+export class gift {
+  createTime: number
+  dollId: number
+  id: number
+  status: string
+  uid: number
+}
+
+/**
+ * 发货信息
+ */
+export class giftInfo {
+  gift: gift
+  user: UserInfo
 }

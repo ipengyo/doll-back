@@ -26,16 +26,18 @@ export default class orderComponent extends Vue {
 
   columns: ColumnOption[] = [{
     title: '序号',
+    width: 60,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {params.row._rowKey}
+          {params.index+1}
         </div>
       )
     }
   }, {
     title: '订单金额',
     key: 'price',
+    width: 60,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
@@ -47,32 +49,35 @@ export default class orderComponent extends Vue {
     title: '订单状态',
     key: 'status',
     align: 'center',
+    width: 120,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {params.row.order.status === 2 ? <tag color="green">已完成</tag> : <tag color="red">用户已取消</tag> }
+          {params.row.order.status === 2 ? <tag color="green">已完成</tag> : <tag color="red">用户已取消</tag>}
         </div>
       )
     }
   }, {
     title: '用户昵称',
     key: 'name',
+    width: 60,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
           {/* {params.row.user.name} */}
-          {(params.row.hasOwnProperty('user'))?params.row.user.name:'nameTest'}
+          {(params.row.hasOwnProperty('user')) ? params.row.user.name : 'nameTest'}
         </div>
       )
     }
   }, {
     title: '用户渠道',
     key: 'ch',
+    width: 60,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
           {/* {params.row.user.ch} */}
-          {(params.row.hasOwnProperty('user'))?params.row.user.ch:'chTest'}
+          {(params.row.hasOwnProperty('user')) ? params.row.user.channel : 'chTest'}
         </div>
       )
     }
@@ -83,18 +88,19 @@ export default class orderComponent extends Vue {
       return (
         <div class="opt-column">
           {/* {params.row.user.phone} */}
-          {(params.row.hasOwnProperty('user'))?params.row.user.phone:'phoneTest'}
+          {(params.row.hasOwnProperty('user') && params.row.user.address) ? JSON.parse(params.row.user.address).phone : ''}
         </div>
       )
     }
   }, {
     title: '用户id',
     key: 'uid',
+    width: 60,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
           {/* {params.row.user.uid} */}
-          {(params.row.hasOwnProperty('user'))?params.row.user.uid:'uidTest'}
+          {(params.row.hasOwnProperty('user')) ? params.row.user.uid : 'uidTest'}
         </div>
       )
     }
@@ -124,7 +130,7 @@ export default class orderComponent extends Vue {
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {(params.row.hasOwnProperty('prodcut'))?params.row.prodcut.name:'productTest'}
+          {(params.row.hasOwnProperty('product')) ? params.row.product.name : ''}
         </div>
       )
     }
@@ -133,7 +139,7 @@ export default class orderComponent extends Vue {
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          <i-button type="text" class="opt-col-btn" on-click={(orderId:number)=>{this.getOrder(params.row.order.id)}}>订单详情</i-button>
+          <i-button type="text" class="opt-col-btn" on-click={(orderId: number) => { this.getOrder(params.row.order.id) }}>订单详情</i-button>
         </div>
       )
     }
@@ -148,7 +154,7 @@ export default class orderComponent extends Vue {
   }
 
   getOrder(orderId: number) {
-    this.$router.push("/order/" + orderId)
+    this.$router.push("/orderInfo/" + orderId)
   }
 
   get tableHeight() {

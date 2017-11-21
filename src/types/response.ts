@@ -1,9 +1,9 @@
-import { DollsInfo, ProductsInfo, BoxInfo, orderInfo } from './model'
+import { DollsInfo, ProductsInfo, BoxInfo, orderInfo, gift, giftInfo, UserInfo } from './model'
 /**
  * 通用接口返回
  */
 export class CommonResponse {
-  stat: string
+  status: number
   errText?: string
   [propName: string]: any
 }
@@ -53,6 +53,22 @@ export class BoxInfoResponse extends CommonResponse {
   box: BoxInfo
   dolls: DollsInfo[]
   url: string
+}
+
+/**
+ * 发货列表
+ */
+export class DeliverysResponse extends CommonResponse {
+  gifts : giftInfo[]
+  totalElements: number
+  totalPages: number
+}
+
+/**
+ * 发货详情
+ */
+export class DeliveryInfoResponse extends CommonResponse {
+  gifts : gift[]
 }
 
 

@@ -86,7 +86,6 @@ export default class SkusComponent extends Vue {
   }]
 
   addDoll() {
-
     let component = new AddDollComponent().$mount()
     document.body.appendChild(component.$el)
     component.$props.title = '添加娃娃'

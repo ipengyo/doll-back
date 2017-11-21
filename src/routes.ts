@@ -1,6 +1,6 @@
 import { RouteConfig } from 'vue-router'
 import DollsComponent from './components/doll/dolls.component'
-import EditDoll from './components/doll/edit-doll'
+import EditDoll from './components/doll/edit-doll.component'
 import EditBox from './components/boxes/edit-box'
 import BoxesComponent from './components/boxes/box.component'
 import skusComponent from './components/skus/skus.component'
@@ -42,7 +42,7 @@ const routes: RouteConfig[] = [{
   path: '/userInfo/:userId',
   component: UserInfoComponent
 }, {
-  path: '/order/:orderid',
+  path: '/orderInfo/:orderid',
   component: OrderInfoComponent
 }]
 

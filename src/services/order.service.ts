@@ -3,8 +3,11 @@ import { CommonResponse, OrderListsResponse, OrderInfoResponse } from '../types/
 import store from '../stores/store'
 
 import commonService from './common.service'
+import { orderInfo, Order } from '../types/model';
 class OrderService {
-  //获取列表
+  /**
+   * 获取订单列表
+   */
   getOrders(): Promise<OrderListsResponse> {
     let start = (store.order.currentIndex - 1) * store.order.pageSize
     return new Promise((resolve, reject) => {
@@ -27,7 +30,10 @@ class OrderService {
     })
   }
 
-  //管理员获取订单信息
+  /**
+   * 管理员获取订单信息
+   * @param orderid 
+   */
   getOrderById(orderid: number): Promise<OrderInfoResponse> {
     return new Promise((resolve,reject)=>{
       httpService.ajax<OrderInfoResponse>({
@@ -36,8 +42,10 @@ class OrderService {
         data: {orderid}
       }).then((result:any) => {
         if(result.status === 200) {
-          //store.order.orderInfo = result.order;
-          store.order.orderx = result.order
+          store.order.orderInfo.order = result.order
+          store.order.orderInfo.product = result.prodcut
+          store.order.orderInfo.user = result.user
+          console.log(store.order.orderInfo);
         }
         resolve(result)
       }).catch(error => {

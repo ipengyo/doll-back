@@ -26,7 +26,11 @@ class DollService {
       })
     })
   }
-  //搜索用户
+
+  /**
+   * 通过用户名搜索用户
+   * @param name 
+   */
   searchUserByName(name: string): Promise<CommonResponse> {
     return new Promise((resolve, reject) => {
       httpService.ajax<CommonResponse>({
