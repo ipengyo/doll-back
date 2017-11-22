@@ -25,6 +25,7 @@ class DollService {
       })
     })
   }
+
   /**
    * 获取娃娃列表中所有娃娃
    */
@@ -45,6 +46,7 @@ class DollService {
       })
     })
   }
+
   /**
    * 添加娃娃
    * @param dollObj 
@@ -109,6 +111,7 @@ class DollService {
       })
     })
   }
+
 }
 let dollService = new DollService()
 export default dollService

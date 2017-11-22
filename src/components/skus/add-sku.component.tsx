@@ -31,12 +31,12 @@ export default class AddSkuComponent extends Vue {
 							<form-item label="商品描述：" prop="description">
 								<i-input type="text" value={this.sku.description} placeholder='商品描述' on-input={(val: string) => this.sku.description = val} />
 							</form-item>
-							<form-item label="兑换次数：" prop="gameCount">
-								<i-input type="text" number={true} value={this.sku.gameCount} placeholder='可兑换的抓娃娃次数' on-input={(val: string) => this.sku.gameCount = val} />
-							</form-item>
 							<form-item label="支付金额：" prop="price">
 								<i-input type="text" number={true} value={this.sku.price} placeholder='需要支付的金额' on-input={(val: string) => this.sku.price = val} />
 							</form-item>
+							<form-item label="兑换次数：" prop="gameCount">
+								<i-input type="text" number={true} value={this.sku.gameCount} placeholder='可兑换的抓娃娃次数' on-input={(val: string) => this.sku.gameCount = val} />
+							</form-item>	
 						</i-form>
 					</div>
 					<div slot="footer">

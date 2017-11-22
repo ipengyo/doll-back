@@ -37,20 +37,20 @@ export default class UserGiftsComponent extends Vue {
   @Prop()
   title: string
   @Prop()
-	uid: number
+  uid: number
 
-	visible: boolean = false
+  visible: boolean = false
 
-	name: string = ''
+  name: string = ''
 
-	close() {
+  close() {
 
-		this.$el.parentNode.removeChild(this.$el)
-	}
+    this.$el.parentNode.removeChild(this.$el)
+  }
 
-	cancel() {
-		this.visible = false
-	}
+  cancel() {
+    this.visible = false
+  }
 
 
   columns: ColumnOption[] = [{
@@ -59,38 +59,45 @@ export default class UserGiftsComponent extends Vue {
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {params.row._rowKey}
+          {params.index + 1}
         </div>
       )
     }
-  // }, {
-  //   title: '兑换物品名',
-  //   key: 'dollName',
-  //   render: (h: CreateElement, params: ColumnRenderParams) => {
-  //     return (
-  //       <div class="opt-column">
-  //         {params.row.dollName}
-  //       </div>
-  //     )
-  //   }
-    }, {
-    title: '兑换时间',
-    key: 'createTime',
+  }, {
+    title: '兑换物品名',
+    key: 'dollName',
+    align: 'center',
+    width: 100,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {commonService.dateTime(params.row.createTime)}
+          {params.row.doll.name}
         </div>
       )
     }
-  },{
+  }, {
+    title: '兑换时间',
+    key: 'createTime',
+    align: 'center',
+    width: 200,
+    render: (h: CreateElement, params: ColumnRenderParams) => {
+      return (
+        <div class="opt-column">
+          {commonService.dateTime(params.row.gift.createTime)}
+        </div>
+      )
+    }
+  }, {
     title: '物流信息',
     key: 'status',
+    width: 100,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       let deliveryStatus = { exist: '未发货', sending: '送货中', recieved: '已收货' }
       return (
         <div class="opt-column">
-          {deliveryStatus[params.row.status]}
+          <tag color="green" v-show={params.row.gift.status === 'recieved'}>{deliveryStatus[params.row.gift.status]}</tag>
+          <tag color="blue" v-show={params.row.gift.status === 'sending'}>{deliveryStatus[params.row.gift.status]}</tag>
+          <tag color="red" v-show={params.row.gift.status === 'exist'}>{deliveryStatus[params.row.gift.status]}</tag>
         </div>
       )
     }
@@ -98,29 +105,28 @@ export default class UserGiftsComponent extends Vue {
     title: '操作',
     key: 'operation',
     align: 'center',
-    width: 180,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          <i-button type="text" class="opt-col-btn" on-click={(giftId:number,status:string) => {this.setGiftStatus(params.row.id,params.row.status)}}>修改物流信息</i-button>
+          <i-button type="text" class="opt-col-btn" on-click={(giftId: number, status: string) => { this.setGiftStatus(params.row.id, params.row.gift.status) }}>修改物流信息</i-button>
         </div>
       )
     }
   }]
 
- 
+
   setGiftStatus(giftId: number, status: string) {
     let component = new EditStatusComponent().$mount()
     document.body.appendChild(component.$el)
     component.$props.title = '修改物流信息'
     component.$props.status = status
-    
+
     component.$on('ok', (status: string) => {
-      deliveryService.setGiftStatus(giftId,status).then((data: any) => {
+      deliveryService.setGiftStatus(giftId, status).then((data: any) => {
         if (data.status === 200) {
           this.$Message.success('设置成功')
           deliveryService.getGiftInfoByUid(this.uid).then(data => {
-            if(data.status === 200) {
+            if (data.status === 200) {
               store.delivery.deliveryInfo = data.gifts
             }
           })
@@ -131,6 +137,6 @@ export default class UserGiftsComponent extends Vue {
     })
   }
   mounted() {
-		this.visible = true
-	}
+    this.visible = true
+  }
 }

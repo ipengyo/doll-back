@@ -1,4 +1,5 @@
-import { DollsInfo, ProductsInfo, BoxInfo, orderInfo, gift, giftInfo, UserInfo } from './model'
+import { DollsInfo, ProductsInfo, BoxInfo, orderInfo, Order, gift, giftInfo, UserInfo, getUser, coinInfo } from './model'
+import UserGiftsComponent from '../components/user/userGifts.component';
 /**
  * 通用接口返回
  */
@@ -33,13 +34,26 @@ export class OrderListsResponse extends CommonResponse {
 }
 //订单信息
 export class OrderInfoResponse extends CommonResponse {
-  order: orderInfo
+  order: Order
   product: ProductsInfo
+  user: UserInfo
 }
 //用户信息列表
 export class UserListsResponse extends CommonResponse {
-
+  users:{
+    content: getUser[]
+    totalElements: number
+  }
 }
+/**
+ * 用户详情
+ */
+export class UserInfoResponse extends CommonResponse {
+  gifts?: giftInfo[]
+  coin: coinInfo
+  user: getUser
+}
+
 /**
  * 娃娃机列表
  */
@@ -63,7 +77,6 @@ export class DeliverysResponse extends CommonResponse {
   totalElements: number
   totalPages: number
 }
-
 /**
  * 发货详情
  */

@@ -21,9 +21,9 @@ class SkuService {
   }
 
   //获取商品信息列表
-  getProductList(): Promise<SkuResponse> {
+  getProductList(): Promise<SkuListsResponse> {
     return new Promise((resolve, reject) => {
-      httpService.ajax<SkuResponse>({
+      httpService.ajax<SkuListsResponse>({
         url: '/game/products',
         methods: "GET"
       }).then(result => {

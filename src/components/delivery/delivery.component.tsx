@@ -61,10 +61,11 @@ export default class DeliveryComponent extends Vue {
   }, {
     title: '兑换物品名',
     key: 'dollName',
+    width: 100,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          {params.row.dollName}
+          {params.row.doll.name}
         </div>
       )
     }
@@ -81,7 +82,7 @@ export default class DeliveryComponent extends Vue {
   }, {
     title: '收货信息',
     key: 'recharge',
-    width: 200,
+    width: 400,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
@@ -92,11 +93,14 @@ export default class DeliveryComponent extends Vue {
   }, {
     title: '物流信息',
     key: 'status',
+    width: 100,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       let deliveryStatus = { exist: '未发货', sending: '送货中', recieved: '已收货' }
       return (
         <div class="opt-column">
-          {deliveryStatus[params.row.gift.status]}
+          <tag color="green" v-show={params.row.gift.status === 'recieved'}>{deliveryStatus[params.row.gift.status]}</tag>
+          <tag color="blue" v-show={params.row.gift.status === 'sending'}>{deliveryStatus[params.row.gift.status]}</tag>
+          <tag color="red" v-show={params.row.gift.status === 'exist'}>{deliveryStatus[params.row.gift.status]}</tag>
         </div>
       )
     }

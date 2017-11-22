@@ -4,10 +4,6 @@ import store from '../stores/store'
 import { reject, resolve } from 'bluebird';
 
 class DeliveryService {
-	deliveryStatus: any;
-	constructor() {
-		this.deliveryStatus = { exist: '未发货', sending: '送货中', recieved: '已收货' }
-	}
 	/**
 	 * 获取发货列表
 	 */
@@ -17,10 +13,10 @@ class DeliveryService {
 			httpService.ajax<DeliverysResponse>({
 				url: '/admin/gifts',
 				methods: 'GET',
-				data:{start,size}
+				data: { start, size }
 			}).then(result => {
 				if (result.status === 200) {
-					store.delivery.deliveryLists = result.gifts;	
+					store.delivery.deliveryLists = result.gifts;
 					store.delivery.total = result.totalElements;
 				}
 				resolve(result)
@@ -29,26 +25,34 @@ class DeliveryService {
 			})
 		})
 	}
-	//根据发货状态查询
+
+	/**
+	 * 根据发货状态查询
+	 * @param status 
+	 */
 	searchByStatus(status: string) {
 		store.delivery.deliveryLists = [];
 		return new Promise((resolve, reject) => {
 			httpService.ajax<CommonResponse>({
-				url: '/doll/api/admin',
-				methods: 'GET'
+				url: `/admin/gift/`,
+				methods: 'GET',
+				data:{status}
 			}).then(result => {
+				if (result.status === 200) {
+					store.delivery.deliveryLists = result.gifts;
+				}
 				resolve(result)
 			}).catch(error => {
 				reject(error)
 			})
 		})
 	}
-	
+
 	/**
 	 * 管理员通过礼物id更新礼物状态
 	 * @param giftId 
 	 */
-	setGiftStatus(giftId: number,status: string) {
+	setGiftStatus(giftId: number, status: string) {
 		return new Promise((resolve, reject) => {
 			httpService.ajax({
 				url: '/admin/gift',
@@ -66,7 +70,7 @@ class DeliveryService {
 	 * 管理员通过用户id获取礼物列表
 	 * @param uid 
 	 */
-	getGiftInfoByUid(uid: number):Promise<DeliveryInfoResponse> {
+	getGiftInfoByUid(uid: number): Promise<DeliveryInfoResponse> {
 		return new Promise((resolve, reject) => {
 			httpService.ajax<DeliveryInfoResponse>({
 				url: `/admin/gift/${uid}`,

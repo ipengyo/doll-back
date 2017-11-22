@@ -1,5 +1,5 @@
 import httpService from './http.service'
-import { CommonResponse } from '../types/response'
+import { CommonResponse, UserListsResponse, UserInfoResponse } from '../types/response'
 import store from '../stores/store'
 import { Message } from 'iview'
 import { EditUser, UserNew } from '../types/model'
@@ -7,18 +7,20 @@ import { EditUser, UserNew } from '../types/model'
 import commonService from './common.service'
 
 class DollService {
-  //获取所有用户信息
-  getUsers(): Promise<CommonResponse> {
+  /**
+   * 获取所有用户信息
+   */
+  getUsers(): Promise<UserListsResponse> {
     let start = (store.doll.currentPage - 1), size = store.doll.pageSize
     return new Promise((resolve, reject) => {
-      httpService.ajax<CommonResponse>({
+      httpService.ajax<UserListsResponse>({
         url: '/admin/user/all',
         methods: 'GET',
         data: { start, size }
       }).then(result => {
         if (result.status === 200) {
           store.user.getUsers = result.users.content
-          store.user.total = result.totalElements
+          store.user.total = result.users.totalElements
         }
         resolve(result)
       }).catch(error => {
@@ -31,9 +33,9 @@ class DollService {
    * 通过用户名搜索用户
    * @param name 
    */
-  searchUserByName(name: string): Promise<CommonResponse> {
+  searchUserByName(name: string): Promise<UserListsResponse> {
     return new Promise((resolve, reject) => {
-      httpService.ajax<CommonResponse>({
+      httpService.ajax<UserListsResponse>({
         url: '/admin/user',
         methods: 'GET',
         data: {
@@ -53,6 +55,12 @@ class DollService {
       })
     })
   }
+
+  /**
+   * 登录
+   * @param name 
+   * @param password 
+   */
   login(name: string, password: string): Promise<CommonResponse> {
     return new Promise((resolve, reject) => {
       httpService.ajax<CommonResponse>({
@@ -69,10 +77,14 @@ class DollService {
       })
     })
   }
-  //获取用户详细信息
-  getUser(id: number): Promise<CommonResponse> {
+
+  /**
+   * 获取用户详细信息
+   * @param id 
+   */
+  getUser(id: number): Promise<UserInfoResponse> {
     return new Promise((resolve, reject) => {
-      httpService.ajax<CommonResponse>({
+      httpService.ajax<UserInfoResponse>({
         url: `/admin/user/${id}`,
         data: { uid: id },
         methods: 'GET'
@@ -85,7 +97,11 @@ class DollService {
       })
     })
   }
-  //设置用户为禁用状态
+
+  /**
+   * 设置用户为禁用状态
+   * @param id 
+   */
   illegalUser(id: number): Promise<CommonResponse> {
     return new Promise((resolve, reject) => {
       httpService.ajax<CommonResponse>({
@@ -99,7 +115,11 @@ class DollService {
       })
     })
   }
-  //设置用户为正常状态
+
+   /**
+   * 设置用户为正常状态
+   * @param id 
+   */
   normalUser(id: number): Promise<CommonResponse> {
     return new Promise((resolve, reject) => {
       httpService.ajax<CommonResponse>({
@@ -113,7 +133,11 @@ class DollService {
       })
     })
   }
-  //删除用户
+
+  /**
+   * 删除用户
+   * @param id 
+   */
   deleteUser(id: number): Promise<CommonResponse> {
     return new Promise((resolve, reject) => {
       httpService.ajax<CommonResponse>({
@@ -127,7 +151,12 @@ class DollService {
       })
     })
   }
-  //修改用户硬币数
+
+  /**
+   * 修改用户硬币数
+   * @param id 
+   * @param coin 
+   */
   editCoins(id: number, coin: number): Promise<CommonResponse> {
     return new Promise((resolve, reject) => {
       httpService.ajax<CommonResponse>({
@@ -144,7 +173,11 @@ class DollService {
       })
     })
   }
-  //修改用户信息
+  
+  /**
+   * 修改用户信息
+   * @param userobj 
+   */
   editUser(userobj: EditUser): Promise<CommonResponse> {
     return new Promise((resolve, reject) => {
       httpService.ajax<CommonResponse>({
@@ -158,7 +191,11 @@ class DollService {
       })
     })
   }
-  //创建用户
+
+ /**
+  * 创建用户
+  * @param userobj 
+  */
   addUser(userobj: UserNew): Promise<CommonResponse> {
     return new Promise((resolve, reject) => {
       httpService.ajax<CommonResponse>({
@@ -172,7 +209,11 @@ class DollService {
       })
     })
   }
-  //管理员获取图片下载地址
+
+  /**
+   * 管理员获取图片下载地址
+   * @param pictureid 
+   */
   getImgUrl(pictureid: number): Promise<CommonResponse> {
     return new Promise((resolve, reject) => {
       httpService.ajax<CommonResponse>({
@@ -186,8 +227,8 @@ class DollService {
       })
     })
   }
-}
 
+}
 
 let dollService = new DollService()
 

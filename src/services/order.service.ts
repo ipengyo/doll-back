@@ -35,17 +35,16 @@ class OrderService {
    * @param orderid 
    */
   getOrderById(orderid: number): Promise<OrderInfoResponse> {
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject) => {
       httpService.ajax<OrderInfoResponse>({
         url: `/admin/order/${orderid}`,
         methods: 'GET',
-        data: {orderid}
-      }).then((result:any) => {
-        if(result.status === 200) {
+        data: { orderid }
+      }).then(result => {
+        if (result.status === 200) {
           store.order.orderInfo.order = result.order
           store.order.orderInfo.product = result.prodcut
           store.order.orderInfo.user = result.user
-          console.log(store.order.orderInfo);
         }
         resolve(result)
       }).catch(error => {

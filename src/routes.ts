@@ -39,7 +39,7 @@ const routes: RouteConfig[] = [{
   path: '/delivery',
   component: DeliveryComponent
 }, {
-  path: '/userInfo/:userId',
+  path: '/userInfo/:userId/totalPrice/:totalPrice',
   component: UserInfoComponent
 }, {
   path: '/orderInfo/:orderid',

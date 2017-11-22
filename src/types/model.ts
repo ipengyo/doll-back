@@ -319,6 +319,7 @@ export class getUser {
   status: number
   uid: number
   image: string
+  totalPrice:number
 }
 
 //coin信息

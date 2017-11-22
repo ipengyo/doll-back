@@ -50,12 +50,17 @@ export default class UserComponent extends Vue {
     title: '渠道号',
     key: 'channel'
   }, {
+    title: '充值总金额',
+    key: 'totalPrice'
+  },{
     title: '用户状态',
     key: 'status',
+    align: 'center',
     render: (h:CreateElement, params:ColumnRenderParams) => {
       return (
         <div class="opt-column">
           <i-button v-show={params.row.status === 1} type="success" size="small">正常</i-button>
+          <i-button v-show={params.row.status === 2} type="primary" size="small" disabled>已删除</i-button>
           <i-button v-show={params.row.status === 4} type="error" size="small">禁止</i-button>
         </div>
       )
@@ -64,12 +69,19 @@ export default class UserComponent extends Vue {
     title: '操作',
     key: 'operation',
     align: 'center',
+    width: 300,
     render: (h: CreateElement, params: ColumnRenderParams) => {
       return (
         <div class="opt-column">
-          <i-button type="text" class="opt-col-btn" on-click={() => { this.handleEdit(params.row.uid) }}>查看详情</i-button>
+          <i-button type="text" class="opt-col-btn" on-click={() => { this.handleEdit(params.row.uid, params.row.totalPrice) }}>查看详情</i-button>
           <i-button type="text" class="opt-col-btn" on-click={() => { this.handleGift(params.row.uid) }}>礼物兑换列表</i-button>
-          <i-button type="text" class="opt-col-btn" on-click={() => { this.handleDelete(params.row.uid) }}>删除</i-button>
+          <poptip
+            confirm
+            title="您确认删除该商品吗？"
+            width={200}
+            on-on-ok={(id: number) => { this.handleDelete(params.row.uid) }}>
+            <i-button v-show={params.row.status != 2} type="text" class="opt-col-btn">删除</i-button>
+          </poptip> 
         </div>
       )
     }
@@ -91,8 +103,8 @@ export default class UserComponent extends Vue {
     });
   }
 
-  handleEdit(id: number) {
-    this.$router.push("/userInfo/" + id)
+  handleEdit(id: number, totalPrice: number) {
+    this.$router.push("/userInfo/" + id + "/totalPrice/" + totalPrice)
   }
 
   handleDelete(id:number) {
